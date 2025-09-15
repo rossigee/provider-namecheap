@@ -4,7 +4,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: domains.namecheap.m.crossplane.io
+  name: sslcertificates.namecheap.m.crossplane.io
 spec:
   group: namecheap.m.crossplane.io
   names:
@@ -12,10 +12,10 @@ spec:
     - crossplane
     - managed
     - namecheap
-    kind: Domain
-    listKind: DomainList
-    plural: domains
-    singular: domain
+    kind: SSLCertificate
+    listKind: SSLCertificateList
+    plural: sslcertificates
+    singular: sslcertificate
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -25,8 +25,11 @@ spec:
     - jsonPath: .status.conditions[?(@.type=='Synced')].status
       name: SYNCED
       type: string
-    - jsonPath: .metadata.annotations.crossplane\.io/external-name
-      name: EXTERNAL-NAME
+    - jsonPath: .status.atProvider.hostName
+      name: HOSTNAME
+      type: string
+    - jsonPath: .status.atProvider.status
+      name: STATUS
       type: string
     - jsonPath: .metadata.creationTimestamp
       name: AGE
@@ -51,27 +54,32 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  autoRenew:
+                  approverEmail:
+                    type: string
+                  autoActivate:
                     type: boolean
+                  certificateType:
+                    minimum: 1
+                    type: integer
+                  csr:
+                    type: string
+                  dnsValidation:
+                    type: string
                   domainName:
                     type: string
-                  nameservers:
-                    items:
-                      type: string
-                    type: array
-                  privacyProtection:
-                    type: boolean
-                  registrationYears:
-                    maximum: 10
-                    minimum: 1
-                    type: integer
-                  renewalYears:
-                    maximum: 10
-                    minimum: 1
-                    type: integer
-                  whoisGuardForwardEmail:
+                  httpDCValidation:
                     type: string
+                  sansToAdd:
+                    type: string
+                  webServerType:
+                    type: string
+                  years:
+                    default: 1
+                    maximum: 3
+                    minimum: 1
+                    type: integer
                 required:
+                - certificateType
                 - domainName
                 type: object
               managementPolicies:
@@ -170,37 +178,41 @@ spec:
             properties:
               atProvider:
                 properties:
-                  createdDate:
+                  activationExpireDate:
                     format: date-time
                     type: string
-                  expirationDate:
-                    format: date-time
-                    type: string
-                  id:
-                    type: string
-                  isAutoRenew:
-                    type: boolean
-                  isExpired:
-                    type: boolean
-                  isLocked:
-                    type: boolean
-                  isOurDNS:
-                    type: boolean
-                  isPremium:
-                    type: boolean
-                  nameservers:
+                  approverEmailList:
                     items:
                       type: string
                     type: array
-                  status:
+                  certificateID:
+                    type: integer
+                  chargedAmount:
                     type: string
-                  updatedDate:
+                  expireDate:
                     format: date-time
                     type: string
-                  whoisGuardID:
-                    type: integer
-                  whoisGuardStatus:
+                  hostName:
                     type: string
+                  isExpired:
+                    type: boolean
+                  orderID:
+                    type: integer
+                  providerName:
+                    type: string
+                  purchaseDate:
+                    format: date-time
+                    type: string
+                  sslType:
+                    type: string
+                  status:
+                    type: string
+                  statusDescription:
+                    type: string
+                  transactionID:
+                    type: integer
+                  years:
+                    type: integer
                 type: object
               conditions:
                 items:

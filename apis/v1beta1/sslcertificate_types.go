@@ -103,7 +103,7 @@ type SSLCertificateObservation struct {
 	TransactionID *int `json:"transactionID,omitempty"`
 
 	// ChargedAmount is the amount charged for the certificate
-	ChargedAmount *float64 `json:"chargedAmount,omitempty"`
+	ChargedAmount *string `json:"chargedAmount,omitempty"`
 
 	// Provider information
 	ProviderName *string `json:"providerName,omitempty"`

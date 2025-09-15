@@ -712,7 +712,7 @@ func (in *SSLCertificateObservation) DeepCopyInto(out *SSLCertificateObservation
 	}
 	if in.ChargedAmount != nil {
 		in, out := &in.ChargedAmount, &out.ChargedAmount
-		*out = new(float64)
+		*out = new(string)
 		**out = **in
 	}
 	if in.ProviderName != nil {
