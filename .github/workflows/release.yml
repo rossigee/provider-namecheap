@@ -1,0 +1,107 @@
+# Standardized Release Template for Crossplane Providers
+# Version: 2025-08-14
+#
+# This template handles ALL publishing for releases
+# - Builds from source on tag creation
+# - Creates both version-specific and latest tags from SAME image
+# - Publishes to primary registry (ghcr.io/rossigee)
+# - Creates GitHub release with notes
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  GO_VERSION: '1.24'
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Find the Go Build Cache
+        id: go
+        run: echo "cache=$(go env GOCACHE)" >> $GITHUB_OUTPUT
+
+      - name: Cache the Go Build Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go.outputs.cache }}
+          key: ${{ runner.os }}-build-release-${{ hashFiles('**/go.sum') }}
+
+      - name: Cache Go Dependencies
+        uses: actions/cache@v4
+        with:
+          path: .work/pkg
+          key: ${{ runner.os }}-pkg-${{ hashFiles('**/go.sum') }}
+
+      - name: Generate Code
+        run: make generate
+
+      - name: Install crossplane CLI
+        run: |
+          curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh" | sh
+          sudo mv crossplane /usr/local/bin
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Publish
+        run: make publish VERSION=${GITHUB_REF_NAME} PLATFORMS=linux_amd64,linux_arm64
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "_output/xpkg/linux_*/*.xpkg"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generateReleaseNotes: true
+          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'rc') }}
+          body: |
+            ## Crossplane Provider Namecheap ${{ github.ref_name }}
+
+            This release provides Crossplane v2 support for managing Namecheap domains and DNS records.
+
+            ### Features
+            - Domain management (registration, nameserver configuration)
+            - DNS record management (A, AAAA, CNAME, MX, TXT, SRV)
+            - Namespaced resources with `.m.` API groups
+            - Sandbox mode for testing
+
+            ### Installation
+            ```bash
+            kubectl apply -f - <<EOF
+            apiVersion: pkg.crossplane.io/v1
+            kind: Provider
+            metadata:
+              name: provider-namecheap
+            spec:
+              package: ghcr.io/rossigee/provider-namecheap:${{ github.ref_name }}
+            EOF
+            ```
+
+            See the [README](https://github.com/rossigee/provider-namecheap/blob/master/README.md) for complete setup instructions.

@@ -1,0 +1,17 @@
+# Handle line endings consistently
+* text=auto eol=lf
+
+# Ensure shell scripts have LF endings
+*.sh text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+
+# Go generated files
+*.pb.go linguist-generated=true
+zz_generated.*.go linguist-generated=true
