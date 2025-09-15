@@ -183,11 +183,8 @@ func (c *external) Observe(ctx context.Context, mg resource.Managed) (managed.Ex
 	upToDate := true
 
 	// Check nameservers if specified
-	if len(cr.Spec.ForProvider.Nameservers) > 0 {
-		// Get current nameservers
-		// Note: This would require additional API call to get nameserver info
-		// For now, we'll assume nameservers are up to date
-	}
+	// Note: Nameserver comparison would require additional API call
+	// For now, we assume nameservers are up to date if domain exists
 
 	cr.Status.SetConditions(xpv1.Available())
 

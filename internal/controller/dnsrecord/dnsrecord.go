@@ -176,10 +176,7 @@ func (c *external) Observe(ctx context.Context, mg resource.Managed) (managed.Ex
 	meta.SetExternalName(cr, externalName)
 
 	// Check if resource is up to date
-	upToDate := true
-	if record.Address != cr.Spec.ForProvider.Value {
-		upToDate = false
-	}
+	upToDate := record.Address == cr.Spec.ForProvider.Value
 	if cr.Spec.ForProvider.TTL != nil && record.TTL != *cr.Spec.ForProvider.TTL {
 		upToDate = false
 	}

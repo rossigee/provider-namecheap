@@ -112,7 +112,9 @@ func (c *Client) makeRequest(ctx context.Context, command string, params map[str
 
 // parseResponse parses the API response and checks for errors
 func parseResponse(resp *http.Response, result interface{}) error {
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close() // Ignore close errors
+	}()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
