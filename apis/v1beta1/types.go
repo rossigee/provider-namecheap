@@ -37,6 +37,12 @@ var (
 	ProviderConfigUsageGroupKind        = schema.GroupKind{Group: Group, Kind: ProviderConfigUsageKind}.String()
 	ProviderConfigUsageKindAPIVersion   = ProviderConfigUsageKind + "." + SchemeGroupVersion.String()
 	ProviderConfigUsageGroupVersionKind = SchemeGroupVersion.WithKind(ProviderConfigUsageKind)
+
+	// SSLCertificate
+	SSLCertificateKind             = "SSLCertificate"
+	SSLCertificateGroupKind        = schema.GroupKind{Group: Group, Kind: SSLCertificateKind}.String()
+	SSLCertificateKindAPIVersion   = SSLCertificateKind + "." + SchemeGroupVersion.String()
+	SSLCertificateGroupVersionKind = SchemeGroupVersion.WithKind(SSLCertificateKind)
 )
 
 // ProviderConfigUsage tracks the usage of a ProviderConfig.

@@ -166,6 +166,124 @@ func (c *Client) SetNameservers(ctx context.Context, domainName string, nameserv
 	return nil
 }
 
+// DomainRenewResponse represents the response from domains.renew
+type DomainRenewResponse struct {
+	APIResponse
+	CommandResponse struct {
+		DomainRenewResult struct {
+			DomainName    string  `xml:"DomainName,attr"`
+			DomainID      int     `xml:"DomainID,attr"`
+			Renew         bool    `xml:"Renew,attr"`
+			ChargedAmount float64 `xml:"ChargedAmount,attr"`
+			TransactionID int     `xml:"TransactionID,attr"`
+			OrderID       int     `xml:"OrderID,attr"`
+		} `xml:"DomainRenewResult"`
+	} `xml:"CommandResponse"`
+}
+
+// DomainCheckResponse represents the response from domains.check
+type DomainCheckResponse struct {
+	APIResponse
+	CommandResponse struct {
+		DomainCheckResult struct {
+			Domains []struct {
+				Domain      string `xml:"Domain,attr"`
+				Available   bool   `xml:"Available,attr"`
+				ErrorCode   string `xml:"ErrorCode,attr"`
+				Description string `xml:"Description,attr"`
+				IsPremium   bool   `xml:"IsPremium,attr"`
+				PremiumRegistrationPrice float64 `xml:"PremiumRegistrationPrice,attr"`
+				PremiumRenewalPrice      float64 `xml:"PremiumRenewalPrice,attr"`
+				PremiumRestorePrice      float64 `xml:"PremiumRestorePrice,attr"`
+				PremiumTransferPrice     float64 `xml:"PremiumTransferPrice,attr"`
+				IcannFee                 float64 `xml:"IcannFee,attr"`
+				EapFee                   float64 `xml:"EapFee,attr"`
+			} `xml:"DomainCheckResult"`
+		} `xml:"DomainCheckResult"`
+	} `xml:"CommandResponse"`
+}
+
+// DomainCheckResult represents a single domain availability check result
+type DomainCheckResult struct {
+	Domain      string
+	Available   bool
+	ErrorCode   string
+	Description string
+	IsPremium   bool
+	PremiumRegistrationPrice float64
+	PremiumRenewalPrice      float64
+	PremiumRestorePrice      float64
+	PremiumTransferPrice     float64
+	IcannFee                 float64
+	EapFee                   float64
+}
+
+// RenewDomain renews a domain for specified number of years
+func (c *Client) RenewDomain(ctx context.Context, domainName string, years int) (*Domain, error) {
+	params := map[string]string{
+		"DomainName": domainName,
+		"Years":      strconv.Itoa(years),
+	}
+
+	resp, err := c.makeRequest(ctx, "namecheap.domains.renew", params)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to make domains.renew request")
+	}
+
+	var result DomainRenewResponse
+	if err := parseResponse(resp, &result); err != nil {
+		return nil, errors.Wrap(err, "failed to parse domains.renew response")
+	}
+
+	if !result.CommandResponse.DomainRenewResult.Renew {
+		return nil, errors.New("domain renewal failed")
+	}
+
+	// After renewal, get the updated domain details
+	return c.GetDomain(ctx, domainName)
+}
+
+// CheckDomainAvailability checks if domains are available for registration
+func (c *Client) CheckDomainAvailability(ctx context.Context, domainNames []string) ([]DomainCheckResult, error) {
+	if len(domainNames) == 0 {
+		return nil, errors.New("at least one domain name must be provided")
+	}
+
+	params := map[string]string{
+		"DomainList": strings.Join(domainNames, ","),
+	}
+
+	resp, err := c.makeRequest(ctx, "namecheap.domains.check", params)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to make domains.check request")
+	}
+
+	var result DomainCheckResponse
+	if err := parseResponse(resp, &result); err != nil {
+		return nil, errors.Wrap(err, "failed to parse domains.check response")
+	}
+
+	// Convert API response to our result type
+	checkResults := make([]DomainCheckResult, len(result.CommandResponse.DomainCheckResult.Domains))
+	for i, domain := range result.CommandResponse.DomainCheckResult.Domains {
+		checkResults[i] = DomainCheckResult{
+			Domain:                   domain.Domain,
+			Available:                domain.Available,
+			ErrorCode:                domain.ErrorCode,
+			Description:              domain.Description,
+			IsPremium:                domain.IsPremium,
+			PremiumRegistrationPrice: domain.PremiumRegistrationPrice,
+			PremiumRenewalPrice:      domain.PremiumRenewalPrice,
+			PremiumRestorePrice:      domain.PremiumRestorePrice,
+			PremiumTransferPrice:     domain.PremiumTransferPrice,
+			IcannFee:                 domain.IcannFee,
+			EapFee:                   domain.EapFee,
+		}
+	}
+
+	return checkResults, nil
+}
+
 // DomainExists checks if a domain exists in the account
 func (c *Client) DomainExists(ctx context.Context, domainName string) (bool, error) {
 	_, err := c.GetDomain(ctx, domainName)

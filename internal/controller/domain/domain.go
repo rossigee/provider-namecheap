@@ -238,6 +238,44 @@ func (c *external) Update(ctx context.Context, mg resource.Managed) (managed.Ext
 
 	domainName := cr.Spec.ForProvider.DomainName
 
+	// Handle domain renewal if requested
+	if cr.Spec.ForProvider.RenewalYears != nil {
+		years := *cr.Spec.ForProvider.RenewalYears
+		_, err := c.client.RenewDomain(ctx, domainName, years)
+		if err != nil {
+			return managed.ExternalUpdate{}, errors.Wrap(err, "cannot renew domain")
+		}
+		// Clear the renewal request after successful renewal
+		cr.Spec.ForProvider.RenewalYears = nil
+	}
+
+	// Handle WhoisGuard privacy protection
+	if cr.Spec.ForProvider.PrivacyProtection != nil {
+		whoisGuard, err := c.client.GetWhoisGuardForDomain(ctx, domainName)
+		enabled := *cr.Spec.ForProvider.PrivacyProtection
+
+		if err == nil {
+			// WhoisGuard exists, check if we need to enable/disable it
+			currentlyEnabled := whoisGuard.Status == "ENABLED"
+
+			if enabled && !currentlyEnabled {
+				// Enable WhoisGuard
+				forwardEmail := ""
+				if cr.Spec.ForProvider.WhoisGuardForwardEmail != nil {
+					forwardEmail = *cr.Spec.ForProvider.WhoisGuardForwardEmail
+				}
+				if err := c.client.EnableWhoisGuard(ctx, whoisGuard.ID, domainName, forwardEmail); err != nil {
+					return managed.ExternalUpdate{}, errors.Wrap(err, "cannot enable WhoisGuard")
+				}
+			} else if !enabled && currentlyEnabled {
+				// Disable WhoisGuard
+				if err := c.client.DisableWhoisGuard(ctx, whoisGuard.ID, domainName); err != nil {
+					return managed.ExternalUpdate{}, errors.Wrap(err, "cannot disable WhoisGuard")
+				}
+			}
+		}
+	}
+
 	// Update nameservers if specified
 	if len(cr.Spec.ForProvider.Nameservers) > 0 {
 		if err := c.client.SetNameservers(ctx, domainName, cr.Spec.ForProvider.Nameservers); err != nil {

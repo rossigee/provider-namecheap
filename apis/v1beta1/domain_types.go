@@ -23,6 +23,12 @@ type DomainParameters struct {
 	// +optional
 	RegistrationYears *int `json:"registrationYears,omitempty"`
 
+	// RenewalYears specifies the number of years to renew the domain for
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=10
+	// +optional
+	RenewalYears *int `json:"renewalYears,omitempty"`
+
 	// Nameservers specifies custom nameservers for the domain
 	// +optional
 	Nameservers []string `json:"nameservers,omitempty"`
@@ -34,6 +40,10 @@ type DomainParameters struct {
 	// PrivacyProtection enables WHOIS privacy protection
 	// +optional
 	PrivacyProtection *bool `json:"privacyProtection,omitempty"`
+
+	// WhoisGuardForwardEmail specifies the email address to forward WhoisGuard emails to
+	// +optional
+	WhoisGuardForwardEmail *string `json:"whoisGuardForwardEmail,omitempty"`
 }
 
 // DomainStatus defines the observed state of Domain
@@ -61,6 +71,27 @@ type DomainObservation struct {
 
 	// Nameservers are the current nameservers for the domain
 	Nameservers []string `json:"nameservers,omitempty"`
+
+	// IsExpired indicates if the domain has expired
+	IsExpired *bool `json:"isExpired,omitempty"`
+
+	// IsLocked indicates if the domain is locked
+	IsLocked *bool `json:"isLocked,omitempty"`
+
+	// IsAutoRenew indicates if auto-renewal is enabled
+	IsAutoRenew *bool `json:"isAutoRenew,omitempty"`
+
+	// WhoisGuardStatus indicates the current WhoisGuard status
+	WhoisGuardStatus *string `json:"whoisGuardStatus,omitempty"`
+
+	// WhoisGuardID is the WhoisGuard service ID
+	WhoisGuardID *int `json:"whoisGuardID,omitempty"`
+
+	// IsPremium indicates if this is a premium domain
+	IsPremium *bool `json:"isPremium,omitempty"`
+
+	// IsOurDNS indicates if using Namecheap DNS hosting
+	IsOurDNS *bool `json:"isOurDNS,omitempty"`
 }
 
 // +kubebuilder:object:root=true

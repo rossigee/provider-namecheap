@@ -21,6 +21,7 @@ import (
 	"github.com/rossigee/provider-namecheap/apis"
 	"github.com/rossigee/provider-namecheap/internal/controller/domain"
 	"github.com/rossigee/provider-namecheap/internal/controller/dnsrecord"
+	"github.com/rossigee/provider-namecheap/internal/controller/sslcertificate"
 )
 
 func main() {
@@ -101,6 +102,7 @@ func main() {
 
 	kingpin.FatalIfError(domain.Setup(mgr, o), "Cannot setup Domain controller")
 	kingpin.FatalIfError(dnsrecord.Setup(mgr, o), "Cannot setup DNSRecord controller")
+	kingpin.FatalIfError(sslcertificate.Setup(mgr, o), "Cannot setup SSLCertificate controller")
 
 	ctx := ctrl.SetupSignalHandler()
 	kingpin.FatalIfError(mgr.Start(ctx), "Cannot start controller manager")
