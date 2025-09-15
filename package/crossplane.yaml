@@ -1,0 +1,33 @@
+apiVersion: meta.pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-namecheap
+  annotations:
+    meta.crossplane.io/maintainer: Ross Golder <ross@golder.tech>
+    meta.crossplane.io/source: github.com/rossigee/provider-namecheap
+    meta.crossplane.io/license: Apache-2.0
+    meta.crossplane.io/description: |
+      Crossplane provider for managing Namecheap domains and DNS records.
+      Supports domain registration/management and DNS record CRUD operations.
+      Implements Crossplane v2 patterns with namespaced resources only.
+    meta.crossplane.io/readme: |
+      # Crossplane Namecheap Provider
+
+      This provider enables declarative management of Namecheap resources through Kubernetes CRDs.
+
+      ## Features
+      - Domain management (registration, nameserver configuration)
+      - DNS record management (A, AAAA, CNAME, MX, TXT, SRV)
+      - Full Crossplane v2 support with namespaced resources
+      - Sandbox mode for testing
+
+      ## Supported Resources
+      - Domain: namecheap.m.crossplane.io/v1beta1
+      - DNSRecord: namecheap.m.crossplane.io/v1beta1
+
+      For complete documentation, see: https://github.com/rossigee/provider-namecheap
+spec:
+  controller:
+    image: ghcr.io/rossigee/provider-namecheap-amd64
+  crossplane:
+    version: ">=v1.18.0-0"

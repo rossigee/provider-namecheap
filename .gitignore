@@ -1,0 +1,33 @@
+# Build artifacts
+bin/
+_output/
+*.out
+*.xpkg
+/provider-namecheap
+__debug*
+build/
+
+# Go coverage
+coverage.out
+*.test
+
+# Development
+.vscode/
+.work/
+.kind
+kubeconfig
+
+# Docs
+/.cache/
+/.public/
+/node_modules/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

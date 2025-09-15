@@ -1,0 +1,17 @@
+apiVersion: namecheap.m.crossplane.io/v1beta1
+kind: Domain
+metadata:
+  name: example-domain
+  namespace: default
+spec:
+  forProvider:
+    domainName: example.com
+    registrationYears: 1
+    nameservers:
+      - ns1.namecheap.com
+      - ns2.namecheap.com
+    autoRenew: true
+    privacyProtection: true
+  providerConfigRef:
+    name: default
+  deletionPolicy: Delete

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: namecheap-creds
+  namespace: crossplane-system
+type: Opaque
+stringData:
+  credentials: |
+    {
+      "apiUser": "your-api-user",
+      "apiKey": "your-api-key",
+      "username": "your-username",
+      "clientIP": "your-client-ip"
+    }
+---
+apiVersion: namecheap.m.crossplane.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: namecheap-creds
+      key: credentials
+  sandboxMode: true  # Set to false for production

@@ -1,0 +1,48 @@
+apiVersion: namecheap.m.crossplane.io/v1beta1
+kind: DNSRecord
+metadata:
+  name: www-record
+  namespace: default
+spec:
+  forProvider:
+    domain: example.com
+    type: A
+    name: www
+    value: 192.168.1.100
+    ttl: 300
+  providerConfigRef:
+    name: default
+  deletionPolicy: Delete
+---
+apiVersion: namecheap.m.crossplane.io/v1beta1
+kind: DNSRecord
+metadata:
+  name: mail-record
+  namespace: default
+spec:
+  forProvider:
+    domain: example.com
+    type: MX
+    name: "@"
+    value: mail.example.com
+    ttl: 1800
+    priority: 10
+  providerConfigRef:
+    name: default
+  deletionPolicy: Delete
+---
+apiVersion: namecheap.m.crossplane.io/v1beta1
+kind: DNSRecord
+metadata:
+  name: txt-verification
+  namespace: default
+spec:
+  forProvider:
+    domain: example.com
+    type: TXT
+    name: "@"
+    value: "v=spf1 include:_spf.google.com ~all"
+    ttl: 3600
+  providerConfigRef:
+    name: default
+  deletionPolicy: Delete

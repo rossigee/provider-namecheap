@@ -1,0 +1,31 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-namecheap
+spec:
+  package: ghcr.io/rossigee/provider-namecheap:v0.1.0
+  runtimeConfigRef:
+    name: provider-namecheap-config
+---
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: provider-namecheap-config
+spec:
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers:
+          - name: package-runtime
+            env:
+            - name: DEBUG
+              value: "true"
+            resources:
+              limits:
+                cpu: 100m
+                memory: 128Mi
+              requests:
+                cpu: 50m
+                memory: 64Mi
