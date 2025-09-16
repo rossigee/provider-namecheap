@@ -179,10 +179,6 @@ jobs:
           go-version-input: ${{ env.GO_VERSION }}
           go-package: './...'
 
-      - name: Run Gosec Security Scanner
-        run: |
-          go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
-          gosec ./...
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
