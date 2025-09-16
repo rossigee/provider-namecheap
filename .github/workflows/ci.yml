@@ -180,9 +180,9 @@ jobs:
           go-package: './...'
 
       - name: Run Gosec Security Scanner
-        uses: securecodewarrior/github-action-gosec@master
-        with:
-          args: './...'
+        run: |
+          go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
+          gosec ./...
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
