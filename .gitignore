@@ -5,7 +5,6 @@ _output/
 *.xpkg
 /provider-namecheap
 __debug*
-build/
 
 # Go coverage
 coverage.out
