@@ -3,6 +3,8 @@ package v1beta1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+
+	xpv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
 const (
@@ -45,35 +47,38 @@ var (
 	SSLCertificateGroupVersionKind = SchemeGroupVersion.WithKind(SSLCertificateKind)
 )
 
-// ProviderConfigUsage tracks the usage of a ProviderConfig.
-// +kubebuilder:object:root=true
+// A ProviderConfigUsage indicates that a resource is using a ProviderConfig.
+// +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="CONFIG-NAME",type="string",JSONPath=".providerConfigRef.name"
+// +kubebuilder:printcolumn:name="RESOURCE-KIND",type="string",JSONPath=".resourceRef.kind"
+// +kubebuilder:printcolumn:name="RESOURCE-NAME",type="string",JSONPath=".resourceRef.name"
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,provider,namecheap}
+// +kubebuilder:object:root=true
 type ProviderConfigUsage struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	ProviderConfigReference ProviderConfigReference `json:"providerConfigRef"`
-	ResourceReference       ResourceReference       `json:"resourceRef"`
+	xpv1.ProviderConfigUsage `json:",inline"`
 }
 
 // GetProviderConfigReference of this ProviderConfigUsage.
-func (mg *ProviderConfigUsage) GetProviderConfigReference() ProviderConfigReference {
-	return mg.ProviderConfigReference
-}
-
-// GetResourceReference of this ProviderConfigUsage.
-func (mg *ProviderConfigUsage) GetResourceReference() ResourceReference {
-	return mg.ResourceReference
+func (mg *ProviderConfigUsage) GetProviderConfigReference() xpv1.Reference {
+	return mg.ProviderConfigUsage.ProviderConfigReference
 }
 
 // SetProviderConfigReference of this ProviderConfigUsage.
-func (mg *ProviderConfigUsage) SetProviderConfigReference(r ProviderConfigReference) {
-	mg.ProviderConfigReference = r
+func (mg *ProviderConfigUsage) SetProviderConfigReference(r xpv1.Reference) {
+	mg.ProviderConfigUsage.ProviderConfigReference = r
+}
+
+// GetResourceReference of this ProviderConfigUsage.
+func (mg *ProviderConfigUsage) GetResourceReference() xpv1.TypedReference {
+	return mg.ProviderConfigUsage.ResourceReference
 }
 
 // SetResourceReference of this ProviderConfigUsage.
-func (mg *ProviderConfigUsage) SetResourceReference(r ResourceReference) {
-	mg.ResourceReference = r
+func (mg *ProviderConfigUsage) SetResourceReference(r xpv1.TypedReference) {
+	mg.ProviderConfigUsage.ResourceReference = r
 }
 
 // ProviderConfigUsageList contains a list of ProviderConfigUsage
@@ -84,20 +89,6 @@ type ProviderConfigUsageList struct {
 	Items           []ProviderConfigUsage `json:"items"`
 }
 
-// ProviderConfigReference to the provider config being used.
-type ProviderConfigReference struct {
-	// Name of the referenced object.
-	Name string `json:"name"`
-}
-
-// ResourceReference to the managed resource using the provider config.
-type ResourceReference struct {
-	// Name of the referenced object.
-	Name string `json:"name"`
-
-	// Namespace of the referenced object.
-	Namespace string `json:"namespace,omitempty"`
-}
 
 func init() {
 	SchemeBuilder.Register(&ProviderConfigUsage{}, &ProviderConfigUsageList{})

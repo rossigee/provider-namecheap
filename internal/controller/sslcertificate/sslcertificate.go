@@ -18,7 +18,6 @@ import (
 	"github.com/crossplane/crossplane-runtime/pkg/ratelimiter"
 	"github.com/crossplane/crossplane-runtime/pkg/reconciler/managed"
 	"github.com/crossplane/crossplane-runtime/pkg/resource"
-	"github.com/crossplane/crossplane-runtime/pkg/resource/fake"
 
 	"github.com/rossigee/provider-namecheap/apis/v1beta1"
 	"github.com/rossigee/provider-namecheap/internal/clients/namecheap"
@@ -46,7 +45,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		resource.ManagedKind(v1beta1.SSLCertificateGroupVersionKind),
 		managed.WithExternalConnecter(&connector{
 			kube:  mgr.GetClient(),
-			usage: resource.NewProviderConfigUsageTracker(mgr.GetClient(), &fake.ProviderConfigUsage{}),
+			usage: resource.NewProviderConfigUsageTracker(mgr.GetClient(), &v1beta1.ProviderConfigUsage{}),
 		}),
 		managed.WithLogger(o.Logger.WithValues("controller", name)),
 		managed.WithPollInterval(o.PollInterval),
@@ -96,10 +95,10 @@ func (c *connector) Connect(ctx context.Context, mg resource.Managed) (managed.E
 
 	// Parse credentials from the secret data
 	var creds struct {
-		APIUser  string `json:"apiUser"`
-		APIKey   string `json:"apiKey"`
+		APIUser  string `json:"api_user"`
+		APIKey   string `json:"api_key"`
 		Username string `json:"username"`
-		ClientIP string `json:"clientIP"`
+		ClientIP string `json:"client_ip"`
 	}
 	if err := json.Unmarshal(data, &creds); err != nil {
 		return nil, errors.Wrap(err, "failed to parse credentials JSON")
