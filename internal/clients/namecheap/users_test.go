@@ -21,7 +21,7 @@ func TestClient_GetUserBalances(t *testing.T) {
 </ApiResponse>`
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, "GET", r.Method)
 		assert.Equal(t, "namecheap.users.getBalances", r.URL.Query().Get("Command"))
 
 		w.Header().Set("Content-Type", "application/xml")
@@ -66,7 +66,7 @@ func TestClient_GetTLDList(t *testing.T) {
 </ApiResponse>`
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, "GET", r.Method)
 		assert.Equal(t, "namecheap.domains.getTldList", r.URL.Query().Get("Command"))
 
 		w.Header().Set("Content-Type", "application/xml")
@@ -126,7 +126,7 @@ func TestClient_GetPricing(t *testing.T) {
 </ApiResponse>`
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, "GET", r.Method)
 		assert.Equal(t, "namecheap.users.getPricing", r.URL.Query().Get("Command"))
 		assert.Equal(t, "DOMAIN", r.URL.Query().Get("ProductType"))
 		assert.Equal(t, "REGISTER", r.URL.Query().Get("Action"))

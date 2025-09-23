@@ -74,7 +74,7 @@ func TestClient_RenewDomain(t *testing.T) {
 			callCount := 0
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				callCount++
-				assert.Equal(t, "POST", r.Method)
+				assert.Equal(t, "GET", r.Method)
 
 				if callCount == 1 {
 					// First call - domain renewal
@@ -183,7 +183,7 @@ func TestClient_CheckDomainAvailability(t *testing.T) {
 			}
 
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				assert.Equal(t, "POST", r.Method)
+				assert.Equal(t, "GET", r.Method)
 				assert.Equal(t, "namecheap.domains.check", r.URL.Query().Get("Command"))
 				assert.Equal(t, strings.Join(tt.domainNames, ","), r.URL.Query().Get("DomainList"))
 
@@ -234,7 +234,7 @@ func TestClient_GetDomains(t *testing.T) {
 </ApiResponse>`
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, "GET", r.Method)
 		assert.Equal(t, "namecheap.domains.getList", r.URL.Query().Get("Command"))
 		assert.Equal(t, "100", r.URL.Query().Get("PageSize"))
 
@@ -286,7 +286,7 @@ func TestClient_CreateDomain(t *testing.T) {
 	callCount := 0
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		callCount++
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, "GET", r.Method)
 
 		if callCount == 1 {
 			// First call - domain creation

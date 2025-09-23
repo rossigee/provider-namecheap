@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/alecthomas/kingpin/v2"
@@ -22,6 +23,7 @@ import (
 	"github.com/rossigee/provider-namecheap/internal/controller/domain"
 	"github.com/rossigee/provider-namecheap/internal/controller/dnsrecord"
 	"github.com/rossigee/provider-namecheap/internal/controller/sslcertificate"
+	"github.com/rossigee/provider-namecheap/internal/version"
 )
 
 func main() {
@@ -50,8 +52,20 @@ func main() {
 
 	// currently, we configure the jitter to be the 5% of the poll interval
 	pollJitter := time.Duration(float64(*pollInterval) * 0.05)
-	log.Debug("Starting", "sync-interval", syncInterval.String(),
-		"poll-interval", pollInterval.String(), "poll-jitter", pollJitter, "max-reconcile-rate", *maxReconcileRate)
+	log.Info("Provider starting up",
+		"provider", "provider-namecheap",
+		"version", version.Version,
+		"go-version", runtime.Version(),
+		"platform", runtime.GOOS+"/"+runtime.GOARCH,
+		"sync-interval", syncInterval.String(),
+		"poll-interval", pollInterval.String(),
+		"poll-jitter", pollJitter.String(),
+		"max-reconcile-rate", *maxReconcileRate,
+		"leader-election", *leaderElection,
+		"namespace", *namespace,
+		"external-secret-stores", *enableExternalSecretStores,
+		"management-policies", *enableManagementPolicies,
+		"debug-mode", *debug)
 
 	cfg, err := ctrl.GetConfig()
 	kingpin.FatalIfError(err, "Cannot get API server rest config")

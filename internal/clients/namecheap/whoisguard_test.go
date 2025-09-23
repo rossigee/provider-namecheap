@@ -27,7 +27,7 @@ func TestClient_GetWhoisGuards(t *testing.T) {
 </ApiResponse>`
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, "GET", r.Method)
 		assert.Equal(t, "namecheap.whoisguard.getList", r.URL.Query().Get("Command"))
 
 		w.Header().Set("Content-Type", "application/xml")
@@ -116,7 +116,7 @@ func TestClient_EnableWhoisGuard(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				assert.Equal(t, "POST", r.Method)
+				assert.Equal(t, "GET", r.Method)
 				assert.Equal(t, "namecheap.whoisguard.enable", r.URL.Query().Get("Command"))
 				assert.Equal(t, "123", r.URL.Query().Get("WhoisguardID"))
 				assert.Equal(t, tt.domainName, r.URL.Query().Get("DomainName"))
@@ -191,7 +191,7 @@ func TestClient_DisableWhoisGuard(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				assert.Equal(t, "POST", r.Method)
+				assert.Equal(t, "GET", r.Method)
 				assert.Equal(t, "namecheap.whoisguard.disable", r.URL.Query().Get("Command"))
 				assert.Equal(t, "123", r.URL.Query().Get("WhoisguardID"))
 				assert.Equal(t, tt.domainName, r.URL.Query().Get("DomainName"))

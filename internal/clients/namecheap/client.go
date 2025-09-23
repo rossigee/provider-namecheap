@@ -93,13 +93,12 @@ func (c *Client) makeRequest(ctx context.Context, command string, params map[str
 		values.Set(key, value)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", c.baseURL, nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", c.baseURL, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create request")
 	}
 
 	req.URL.RawQuery = values.Encode()
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("User-Agent", "crossplane-provider-namecheap/1.0")
 
 	resp, err := c.httpClient.Do(req)

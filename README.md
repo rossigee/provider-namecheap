@@ -25,7 +25,7 @@ This provider enables you to manage Namecheap resources declaratively using Kube
 - **Account Management**: Balance checking, pricing retrieval, TLD support verification
 - **Crossplane v2 Support**: Namespaced resources with `.m.` API groups for multi-tenancy
 - **Sandbox Mode**: Test without real charges using Namecheap's sandbox environment
-- **Comprehensive Testing**: 51.1% test coverage with 48 test cases across all APIs
+- **Comprehensive Testing**: 51.0% test coverage with 22 test functions (42 test executions) across all APIs
 - **Provider Status**: ✅ Production ready with standardized CI/CD pipeline
 
 ## Container Registry
@@ -340,7 +340,7 @@ spec:
 ### Requirements
 
 - `docker`
-- `go` (1.24+)
+- `go` (1.25.1+)
 - `make`
 - `kubectl`
 - `git` with submodules

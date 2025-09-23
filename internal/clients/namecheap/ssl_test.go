@@ -23,7 +23,7 @@ func TestClient_GetSSLCertificates(t *testing.T) {
 </ApiResponse>`
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, "GET", r.Method)
 		assert.Equal(t, "namecheap.ssl.getList", r.URL.Query().Get("Command"))
 		assert.Equal(t, "100", r.URL.Query().Get("PageSize"))
 
@@ -118,7 +118,7 @@ func TestClient_CreateSSLCertificate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				assert.Equal(t, "POST", r.Method)
+				assert.Equal(t, "GET", r.Method)
 				assert.Equal(t, "namecheap.ssl.create", r.URL.Query().Get("Command"))
 				assert.Equal(t, string(rune(tt.certificateType+'0')), r.URL.Query().Get("Type"))
 				assert.Equal(t, string(rune(tt.years+'0')), r.URL.Query().Get("Years"))
@@ -219,7 +219,7 @@ func TestClient_ActivateSSLCertificate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				assert.Equal(t, "POST", r.Method)
+				assert.Equal(t, "GET", r.Method)
 				assert.Equal(t, "namecheap.ssl.activate", r.URL.Query().Get("Command"))
 				assert.Equal(t, "123", r.URL.Query().Get("CertificateID"))
 				assert.Equal(t, tt.csr, r.URL.Query().Get("CSR"))
@@ -278,7 +278,7 @@ func TestClient_GetSSLCertificate(t *testing.T) {
 </ApiResponse>`
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, "GET", r.Method)
 		assert.Equal(t, "namecheap.ssl.getInfo", r.URL.Query().Get("Command"))
 		assert.Equal(t, "123", r.URL.Query().Get("CertificateID"))
 
@@ -384,7 +384,7 @@ func TestClient_ResendSSLApprovalEmail(t *testing.T) {
 </ApiResponse>`
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, "GET", r.Method)
 		assert.Equal(t, "namecheap.ssl.resend", r.URL.Query().Get("Command"))
 		assert.Equal(t, "123", r.URL.Query().Get("CertificateID"))
 
