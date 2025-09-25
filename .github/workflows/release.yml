@@ -72,7 +72,6 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
           REGISTRY_ORGS: ghcr.io/rossigee
-          PLATFORMS: linux_amd64,linux_arm64
 
       - name: Create Release
         uses: ncipollo/release-action@v1
