@@ -8,9 +8,6 @@ PLATFORMS ?= linux_amd64 linux_arm64
 # Include build system
 -include build/makelib/common.mk
 
-# Fix architecture mismatch: override TOOLS_HOST_DIR after common.mk is loaded
-# Tools installed to linux_amd64 but build system looks in linux_x86_64
-override TOOLS_HOST_DIR := $(CACHE_DIR)/tools/linux_amd64
 
 # Setup Output
 -include build/makelib/output.mk
@@ -30,6 +27,10 @@ GO111MODULE = on
 REGISTRY_ORGS ?= ghcr.io/rossigee
 IMAGES = $(PROJECT_NAME)
 -include build/makelib/imagelight.mk
+
+# Fix architecture mismatch BEFORE k8s tools are loaded
+# Tools are downloaded to linux_amd64 but build system looks in linux_x86_64
+override TOOLS_HOST_DIR := $(CACHE_DIR)/tools/linux_amd64
 
 # Setup K8s tools (for crossplane CLI)
 -include build/makelib/k8s_tools.mk
