@@ -8,6 +8,10 @@ PLATFORMS ?= linux_amd64 linux_arm64
 # Include build system
 -include build/makelib/common.mk
 
+# Fix architecture mismatch: override TOOLS_HOST_DIR after common.mk is loaded
+# Tools installed to linux_amd64 but build system looks in linux_x86_64
+override TOOLS_HOST_DIR := $(CACHE_DIR)/tools/linux_amd64
+
 # Setup Output
 -include build/makelib/output.mk
 
