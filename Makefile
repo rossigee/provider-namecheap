@@ -39,3 +39,6 @@ IMAGES = $(PROJECT_NAME)
 XPKG_REG_ORGS ?= ghcr.io/rossigee
 XPKGS = $(PROJECT_NAME)
 -include build/makelib/xpkg.mk
+
+# Override xpkg.build target to ensure CROSSPLANE_CLI dependency
+xpkg.build.$(PROJECT_NAME): $(CROSSPLANE_CLI)
