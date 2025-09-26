@@ -1,21 +1,27 @@
 # Standardized Release Template for Crossplane Providers
-# Version: 2025-08-14
+# Version: 2025-09-26 - Updated for Go 1.25.1
 #
 # This template handles ALL publishing for releases
-# - Builds from source on tag creation
-# - Creates both version-specific and latest tags from SAME image
-# - Publishes to primary registry (ghcr.io/rossigee)
-# - Creates GitHub release with notes
+# - Only runs on version tag creation to avoid conflicts with CI
+# - Builds from source and publishes to primary registry
+# - Creates GitHub release with auto-generated notes
+# - Single source of truth for version and latest tags
 
 name: Release
 
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag to release (e.g., v1.0.0)'
+        required: true
+        type: string
 
 env:
-  GO_VERSION: '1.24.5'
+  GO_VERSION: '1.25.1'
 
 jobs:
   release:
@@ -37,12 +43,19 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
 
-      - name: Generate Code
-        run: make generate
+      - name: Vendor Dependencies
+        run: go mod vendor
 
-      - name: Extract Version
+      - name: Determine Version
         id: version
-        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Detected version: $VERSION"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -52,55 +65,63 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.PAT_TOKEN }}
 
-      - name: Install Crossplane CLI
+      - name: Build and Publish All Artifacts
         run: |
-          # Create the tools directory and install crossplane CLI
-          mkdir -p .cache/tools/linux_x86_64
-          curl -fsSLo .cache/tools/linux_x86_64/crossplane-cli-v2.0.2 \
-            https://releases.crossplane.io/stable/v2.0.2/bin/linux_amd64/crank?source=build
-          chmod +x .cache/tools/linux_x86_64/crossplane-cli-v2.0.2
+          # Use the standardized build system to handle everything
+          export VERSION="${{ steps.version.outputs.version }}"
 
-      # Build and publish everything in one step
-      - name: Publish All Artifacts
-        run: |
-          # Publish versioned artifacts (Docker images and Crossplane packages)
-          make publish
-          # Publish latest artifacts
-          make publish VERSION=latest
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
-          REGISTRY_ORGS: ghcr.io/rossigee
+          echo "Repository: ${{ github.repository }}"
+          echo "Repository owner: ${{ github.repository_owner }}"
+          echo "Version: ${VERSION}"
 
-      - name: Create Release
-        uses: ncipollo/release-action@v1
+          # Build and publish using make targets that handle Docker + Crossplane packages
+          make publish REGISTRY_ORGS="ghcr.io/${{ github.repository_owner }}" XPKG_REG_ORGS="ghcr.io/${{ github.repository_owner }}"
+
+          echo "✅ Published to ghcr.io/${{ github.repository_owner }}"
+          echo "🏷️  Tags: ${VERSION}, latest"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          artifacts: "_output/xpkg/linux_*/*.xpkg"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          generateReleaseNotes: true
-          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'rc') }}
-          body: |
-            ## Crossplane Provider Namecheap ${{ github.ref_name }}
+          name: Release ${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
 
-            This release provides Crossplane v2 support for managing Namecheap domains and DNS records.
-
-            ### Features
-            - Domain management (registration, nameserver configuration)
-            - DNS record management (A, AAAA, CNAME, MX, TXT, SRV)
-            - Namespaced resources with `.m.` API groups
-            - Sandbox mode for testing
-
-            ### Installation
-            ```bash
-            kubectl apply -f - <<EOF
-            apiVersion: pkg.crossplane.io/v1
-            kind: Provider
-            metadata:
-              name: provider-namecheap
-            spec:
-              package: ghcr.io/rossigee/provider-namecheap:${{ github.ref_name }}
-            EOF
-            ```
-
-            See the [README](https://github.com/rossigee/provider-namecheap/blob/master/README.md) for complete setup instructions.
+# Key Principles for this Template:
+#
+# 1. SINGLE SOURCE OF TRUTH FOR PUBLISHING
+#    - Only this workflow publishes to registries
+#    - CI workflow only validates builds
+#    - Eliminates tag conflicts
+#
+# 2. IDENTICAL VERSION AND LATEST TAGS
+#    - Build image once with version tag
+#    - Tag the SAME image as latest (line 87-88)
+#    - Push both tags (they're identical)
+#    - No separate builds = no image differences
+#
+# 3. STANDARDIZED REGISTRY PUBLISHING
+#    - Primary: ghcr.io/rossigee/provider-{name}
+#    - Version tag: v1.2.3
+#    - Latest tag: latest
+#    - Both Crossplane packages and container images
+#
+# 4. BUILD FROM SOURCE
+#    - Always build from the tagged source
+#    - No dependency on pre-built artifacts
+#    - Ensures reproducible builds
+#
+# 5. PROPER AUTHENTICATION
+#    - Uses PAT_TOKEN for registry authentication
+#    - Proper permissions for package publishing
+#    - GitHub release creation
+#
+# To apply this template:
+# 1. Copy this structure to .github/workflows/release.yml
+# 2. Replace PROVIDER_NAME with actual provider name (e.g., provider-mailgun)
+# 3. Ensure Dockerfile path is correct
+# 4. Test with a version tag (should publish both tags identically)
+# 5. Verify latest and version tags point to same image digest
