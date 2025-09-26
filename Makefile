@@ -27,6 +27,9 @@ REGISTRY_ORGS ?= ghcr.io/rossigee
 IMAGES = $(PROJECT_NAME)
 -include build/makelib/imagelight.mk
 
+# Setup K8s tools (for crossplane CLI)
+-include build/makelib/k8s_tools.mk
+
 # Setup XPKG
 XPKG_REG_ORGS ?= ghcr.io/rossigee
 XPKGS = $(PROJECT_NAME)
