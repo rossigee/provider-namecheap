@@ -42,3 +42,6 @@ XPKGS = $(PROJECT_NAME)
 
 # Override xpkg.build target to ensure CROSSPLANE_CLI dependency
 xpkg.build.$(PROJECT_NAME): $(CROSSPLANE_CLI)
+
+# Add missing docker.build target for CI compatibility
+docker.build: do.build.images
