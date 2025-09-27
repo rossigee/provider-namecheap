@@ -34,16 +34,17 @@ func TestClient_GetSSLCertificates(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	certificates, err := client.GetSSLCertificates(context.Background())
 
@@ -134,16 +135,17 @@ func TestClient_CreateSSLCertificate(t *testing.T) {
 			}))
 			defer server.Close()
 
-			client := &Client{
-				baseURL: server.URL,
-				httpClient: &http.Client{
+			config := Config{
+				APIUser:  "testuser",
+				APIKey:   "testkey",
+				Username: "testuser",
+				ClientIP: "127.0.0.1",
+				BaseURL:  server.URL,
+				HTTPClient: &http.Client{
 					Timeout: 5 * time.Second,
 				},
-				apiUser:  "testuser",
-				apiKey:   "testkey",
-				username: "testuser",
-				clientIP: "127.0.0.1",
 			}
+			client := NewClient(config)
 
 			certID, err := client.CreateSSLCertificate(context.Background(), tt.certificateType, tt.years, tt.sansToAdd)
 
@@ -240,16 +242,17 @@ func TestClient_ActivateSSLCertificate(t *testing.T) {
 			}))
 			defer server.Close()
 
-			client := &Client{
-				baseURL: server.URL,
-				httpClient: &http.Client{
+			config := Config{
+				APIUser:  "testuser",
+				APIKey:   "testkey",
+				Username: "testuser",
+				ClientIP: "127.0.0.1",
+				BaseURL:  server.URL,
+				HTTPClient: &http.Client{
 					Timeout: 5 * time.Second,
 				},
-				apiUser:  "testuser",
-				apiKey:   "testkey",
-				username: "testuser",
-				clientIP: "127.0.0.1",
 			}
+			client := NewClient(config)
 
 			err := client.ActivateSSLCertificate(context.Background(), tt.certificateID, tt.csr, tt.domainName, tt.approverEmail, tt.httpDCValidation, tt.dnsValidation, tt.webServerType)
 
@@ -289,16 +292,17 @@ func TestClient_GetSSLCertificate(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	cert, err := client.GetSSLCertificate(context.Background(), 123)
 
@@ -338,16 +342,17 @@ func TestClient_GetSSLCertificatesByDomain(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	// Test finding certificates for exact domain match
 	certs, err := client.GetSSLCertificatesByDomain(context.Background(), "example.com")
@@ -395,16 +400,17 @@ func TestClient_ResendSSLApprovalEmail(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	err := client.ResendSSLApprovalEmail(context.Background(), 123)
 	assert.NoError(t, err)

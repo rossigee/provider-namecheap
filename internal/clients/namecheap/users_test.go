@@ -31,16 +31,17 @@ func TestClient_GetUserBalances(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	balance, err := client.GetUserBalances(context.Background())
 
@@ -76,16 +77,17 @@ func TestClient_GetTLDList(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	tlds, err := client.GetTLDList(context.Background())
 
@@ -138,16 +140,17 @@ func TestClient_GetPricing(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	pricing, err := client.GetPricing(context.Background(), "DOMAIN", "", "REGISTER")
 
@@ -193,16 +196,17 @@ func TestClient_GetDomainPricing(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	pricing, err := client.GetDomainPricing(context.Background(), "REGISTER")
 
@@ -255,16 +259,17 @@ func TestClient_HasSufficientBalance(t *testing.T) {
 			}))
 			defer server.Close()
 
-			client := &Client{
-				baseURL: server.URL,
-				httpClient: &http.Client{
+			config := Config{
+				APIUser:  "testuser",
+				APIKey:   "testkey",
+				Username: "testuser",
+				ClientIP: "127.0.0.1",
+				BaseURL:  server.URL,
+				HTTPClient: &http.Client{
 					Timeout: 5 * time.Second,
 				},
-				apiUser:  "testuser",
-				apiKey:   "testkey",
-				username: "testuser",
-				clientIP: "127.0.0.1",
 			}
+			client := NewClient(config)
 
 			sufficient, err := client.HasSufficientBalance(context.Background(), tt.requiredAmount)
 
@@ -293,16 +298,17 @@ func TestClient_GetTLDByName(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	// Test finding existing TLD
 	tld, err := client.GetTLDByName(context.Background(), "com")
@@ -344,16 +350,17 @@ func TestClient_IsTLDSupported(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	// Test .com supports all operations
 	supported, err := client.IsTLDSupported(context.Background(), "com", "register")

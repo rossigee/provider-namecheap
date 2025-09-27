@@ -1,0 +1,206 @@
+# Example configuration for production-hardened Namecheap provider deployment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: provider-namecheap
+  namespace: crossplane-system
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: provider-namecheap
+  template:
+    metadata:
+      labels:
+        app: provider-namecheap
+    spec:
+      containers:
+      - name: provider
+        image: ghcr.io/rossigee/provider-namecheap:v0.4.4
+        ports:
+        - name: webhook
+          containerPort: 8443
+          protocol: TCP
+        - name: metrics
+          containerPort: 8080
+          protocol: TCP
+        env:
+        # Production hardening configuration
+        - name: NAMECHEAP_RATE_LIMIT_RPS
+          value: "2.0"  # Conservative rate limiting
+        - name: NAMECHEAP_RATE_LIMIT_BURST
+          value: "5"
+        - name: NAMECHEAP_CIRCUIT_BREAKER_MAX_FAILURES
+          value: "5"
+        - name: NAMECHEAP_CIRCUIT_BREAKER_RESET_TIMEOUT
+          value: "30s"
+        - name: NAMECHEAP_RETRY_MAX_ATTEMPTS
+          value: "3"
+        - name: NAMECHEAP_RETRY_BASE_DELAY
+          value: "100ms"
+        - name: NAMECHEAP_RETRY_MAX_DELAY
+          value: "30s"
+
+        # Webhook configuration
+        - name: WEBHOOK_ENABLED
+          value: "true"
+        - name: WEBHOOK_PORT
+          value: "8443"
+        - name: WEBHOOK_PATH
+          value: "/webhook"
+        - name: WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: namecheap-webhook-secret
+              key: webhook-secret
+        - name: WEBHOOK_TLS_CERT_DIR
+          value: "/tmp/k8s-webhook-server/serving-certs"
+
+        # Observability
+        - name: METRICS_ENABLED
+          value: "true"
+        - name: METRICS_PORT
+          value: "8080"
+        - name: LOG_LEVEL
+          value: "info"
+
+        # API client configuration
+        - name: NAMECHEAP_API_TIMEOUT
+          value: "30s"
+        - name: NAMECHEAP_SANDBOX
+          value: "false"
+
+        volumeMounts:
+        - name: webhook-certs
+          mountPath: /tmp/k8s-webhook-server/serving-certs
+          readOnly: true
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+      volumes:
+      - name: webhook-certs
+        secret:
+          secretName: namecheap-webhook-certs
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: namecheap-webhook-secret
+  namespace: crossplane-system
+type: Opaque
+data:
+  # Base64 encoded webhook secret for signature verification
+  webhook-secret: <base64-encoded-webhook-secret>
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: provider-namecheap-webhook
+  namespace: crossplane-system
+spec:
+  selector:
+    app: provider-namecheap
+  ports:
+  - name: webhook
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  - name: metrics
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: provider-namecheap-metrics
+  namespace: crossplane-system
+  labels:
+    app: provider-namecheap
+spec:
+  selector:
+    app: provider-namecheap
+  ports:
+  - name: metrics
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  type: ClusterIP
+
+---
+# ServiceMonitor for Prometheus integration (if using Prometheus Operator)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: provider-namecheap
+  namespace: crossplane-system
+spec:
+  selector:
+    matchLabels:
+      app: provider-namecheap
+  endpoints:
+  - port: metrics
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+
+---
+# Network policy for security (optional)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: provider-namecheap
+  namespace: crossplane-system
+spec:
+  podSelector:
+    matchLabels:
+      app: provider-namecheap
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring  # Allow Prometheus scraping
+    ports:
+    - protocol: TCP
+      port: 8080
+  - from: []  # Allow webhook traffic from anywhere (configure as needed)
+    ports:
+    - protocol: TCP
+      port: 8443
+  egress:
+  - {}  # Allow all egress for API calls to Namecheap

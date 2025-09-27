@@ -3,7 +3,7 @@ kind: Provider
 metadata:
   name: provider-namecheap
 spec:
-  package: ghcr.io/rossigee/provider-namecheap:v0.1.0
+  package: ghcr.io/rossigee/provider-namecheap:v0.4.4
   runtimeConfigRef:
     name: provider-namecheap-config
 ---

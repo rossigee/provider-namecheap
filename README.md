@@ -8,9 +8,9 @@
 [build]: https://github.com/rossigee/provider-namecheap/actions/workflows/ci.yml
 [releases]: https://github.com/rossigee/provider-namecheap/releases
 
-**✅ BUILD STATUS: WORKING** - Successfully builds and passes all tests (v0.3.2)
+**✅ BUILD STATUS: WORKING** - Successfully builds and passes all tests (v0.4.4)
 
-Crossplane provider for comprehensive Namecheap service management with full v2 support and extensive API coverage.
+Production-hardened Crossplane provider for comprehensive Namecheap service management with full v2 support, webhook integration, and extensive API coverage.
 
 ## Overview
 
@@ -18,19 +18,33 @@ This provider enables you to manage Namecheap resources declaratively using Kube
 
 ## Features
 
+### Core API Coverage
 - **Domain Management**: Registration, renewals, transfers, availability checking, and nameserver configuration
 - **DNS Record Management**: Full CRUD operations for A, AAAA, CNAME, MX, TXT, SRV records with batch operations
 - **SSL Certificate Management**: Complete lifecycle management including purchase, activation, renewal, and reissue
 - **WhoisGuard Privacy Protection**: Enable/disable privacy protection services for domains
 - **Account Management**: Balance checking, pricing retrieval, TLD support verification
+
+### Production Hardening
+- **Rate Limiting**: Conservative 2 RPS default with configurable burst capacity and circuit breaker protection
+- **Retry Logic**: Exponential backoff with jitter for transient failures (network, rate limiting, server errors)
+- **Error Handling**: Comprehensive error categorization with structured context preservation
+- **Observability**: Built-in metrics, structured logging, and health endpoints for monitoring
+
+### Advanced Features
+- **Webhook Support**: Real-time event processing for domain, DNS, SSL, and account changes with HMAC signature verification
 - **Crossplane v2 Support**: Namespaced resources with `.m.` API groups for multi-tenancy
 - **Sandbox Mode**: Test without real charges using Namecheap's sandbox environment
+- **High Availability**: Multiple provider replicas with load balancing and graceful degradation
+
+### Quality & Testing
 - **Comprehensive Testing**: 51.0% test coverage with 22 test functions (42 test executions) across all APIs
-- **Provider Status**: ✅ Production ready with standardized CI/CD pipeline
+- **Production Ready**: ✅ Enterprise-grade reliability with standardized CI/CD pipeline
+- **Security**: HMAC webhook verification, TLS support, and network policy integration
 
 ## Container Registry
 
-- **Primary**: `ghcr.io/rossigee/provider-namecheap:v0.3.2`
+- **Primary**: `ghcr.io/rossigee/provider-namecheap:v0.4.4`
 - **Harbor**: Available via environment configuration
 - **Upbound**: Available via environment configuration
 
@@ -53,7 +67,7 @@ kind: Provider
 metadata:
   name: provider-namecheap
 spec:
-  package: ghcr.io/rossigee/provider-namecheap:v0.3.2
+  package: ghcr.io/rossigee/provider-namecheap:v0.4.4
 EOF
 ```
 
@@ -277,6 +291,131 @@ metadata:
 spec:
   # ... certificate spec
 ```
+
+## Webhook Integration
+
+The provider supports real-time webhook notifications from Namecheap for immediate event processing and status updates.
+
+### Supported Events
+
+- **Domain Events**: Registration, renewal, expiration, transfer
+- **DNS Events**: Record creation, updates, deletion
+- **SSL Events**: Certificate issuance, renewal, expiration, revocation
+- **Account Events**: Balance updates, payment notifications
+
+### Quick Webhook Setup
+
+1. **Enable webhook support in provider deployment:**
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: provider-namecheap
+  namespace: crossplane-system
+spec:
+  template:
+    spec:
+      containers:
+      - name: provider
+        env:
+        - name: WEBHOOK_ENABLED
+          value: "true"
+        - name: WEBHOOK_PORT
+          value: "8443"
+        - name: WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: namecheap-webhook-secret
+              key: webhook-secret
+        ports:
+        - name: webhook
+          containerPort: 8443
+```
+
+2. **Create webhook secret:**
+
+```bash
+# Generate secure webhook secret
+WEBHOOK_SECRET=$(openssl rand -hex 32)
+kubectl create secret generic namecheap-webhook-secret \
+  --from-literal=webhook-secret="$WEBHOOK_SECRET" \
+  -n crossplane-system
+```
+
+3. **Configure webhook endpoint in Namecheap portal:**
+
+```
+URL: https://your-webhook-endpoint.example.com/webhook
+Secret: <your-webhook-secret>
+Events: domain.*, dns.*, ssl.*, account.*
+```
+
+### Monitoring Webhooks
+
+```bash
+# Check webhook health
+curl -k https://your-webhook-endpoint.example.com/health
+
+# View webhook metrics
+curl -k https://your-webhook-endpoint.example.com/metrics
+
+# Monitor webhook logs
+kubectl logs -n crossplane-system deployment/provider-namecheap | grep webhook
+```
+
+📖 **For complete webhook setup instructions, see [docs/webhook-setup.md](docs/webhook-setup.md)**
+
+## Production Hardening Configuration
+
+The provider includes production-grade hardening features that can be configured via environment variables:
+
+### Rate Limiting & Circuit Breaker
+
+```yaml
+env:
+# Rate limiting configuration
+- name: NAMECHEAP_RATE_LIMIT_RPS
+  value: "2.0"  # Requests per second (default: 2.0)
+- name: NAMECHEAP_RATE_LIMIT_BURST
+  value: "5"    # Burst capacity (default: 5)
+
+# Circuit breaker configuration
+- name: NAMECHEAP_CIRCUIT_BREAKER_MAX_FAILURES
+  value: "5"    # Max failures before opening (default: 5)
+- name: NAMECHEAP_CIRCUIT_BREAKER_RESET_TIMEOUT
+  value: "30s"  # Reset timeout (default: 30s)
+```
+
+### Retry Configuration
+
+```yaml
+env:
+# Retry logic configuration
+- name: NAMECHEAP_RETRY_MAX_ATTEMPTS
+  value: "3"      # Max retry attempts (default: 3)
+- name: NAMECHEAP_RETRY_BASE_DELAY
+  value: "100ms"  # Base delay (default: 100ms)
+- name: NAMECHEAP_RETRY_MAX_DELAY
+  value: "30s"    # Maximum delay (default: 30s)
+- name: NAMECHEAP_RETRY_BACKOFF_FACTOR
+  value: "2.0"    # Backoff multiplier (default: 2.0)
+```
+
+### Observability
+
+```yaml
+env:
+# Monitoring and logging
+- name: METRICS_ENABLED
+  value: "true"
+- name: METRICS_PORT
+  value: "8080"
+- name: LOG_LEVEL
+  value: "info"  # debug, info, warn, error
+```
+
+📖 **For complete production deployment example, see [examples/production-hardening.yaml](examples/production-hardening.yaml)**
 
 ## Configuration
 

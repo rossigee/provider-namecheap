@@ -99,16 +99,17 @@ func TestClient_RenewDomain(t *testing.T) {
 			}))
 			defer server.Close()
 
-			client := &Client{
-				baseURL: server.URL,
-				httpClient: &http.Client{
+			config := Config{
+				APIUser:  "testuser",
+				APIKey:   "testkey",
+				Username: "testuser",
+				ClientIP: "127.0.0.1",
+				BaseURL:  server.URL,
+				HTTPClient: &http.Client{
 					Timeout: 5 * time.Second,
 				},
-				apiUser:  "testuser",
-				apiKey:   "testkey",
-				username: "testuser",
-				clientIP: "127.0.0.1",
 			}
+			client := NewClient(config)
 
 			domain, err := client.RenewDomain(context.Background(), tt.domainName, tt.years)
 
@@ -194,16 +195,17 @@ func TestClient_CheckDomainAvailability(t *testing.T) {
 			}))
 			defer server.Close()
 
-			client := &Client{
-				baseURL: server.URL,
-				httpClient: &http.Client{
+			config := Config{
+				APIUser:  "testuser",
+				APIKey:   "testkey",
+				Username: "testuser",
+				ClientIP: "127.0.0.1",
+				BaseURL:  server.URL,
+				HTTPClient: &http.Client{
 					Timeout: 5 * time.Second,
 				},
-				apiUser:  "testuser",
-				apiKey:   "testkey",
-				username: "testuser",
-				clientIP: "127.0.0.1",
 			}
+			client := NewClient(config)
 
 			results, err := client.CheckDomainAvailability(context.Background(), tt.domainNames)
 
@@ -245,16 +247,17 @@ func TestClient_GetDomains(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	domains, err := client.GetDomains(context.Background())
 
@@ -311,16 +314,17 @@ func TestClient_CreateDomain(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	domain, err := client.CreateDomain(context.Background(), "newdomain.com", 2)
 

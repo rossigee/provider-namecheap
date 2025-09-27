@@ -37,16 +37,17 @@ func TestClient_GetWhoisGuards(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	whoisGuards, err := client.GetWhoisGuards(context.Background())
 
@@ -132,16 +133,17 @@ func TestClient_EnableWhoisGuard(t *testing.T) {
 			}))
 			defer server.Close()
 
-			client := &Client{
-				baseURL: server.URL,
-				httpClient: &http.Client{
+			config := Config{
+				APIUser:  "testuser",
+				APIKey:   "testkey",
+				Username: "testuser",
+				ClientIP: "127.0.0.1",
+				BaseURL:  server.URL,
+				HTTPClient: &http.Client{
 					Timeout: 5 * time.Second,
 				},
-				apiUser:  "testuser",
-				apiKey:   "testkey",
-				username: "testuser",
-				clientIP: "127.0.0.1",
 			}
+			client := NewClient(config)
 
 			err := client.EnableWhoisGuard(context.Background(), tt.whoisGuardID, tt.domainName, tt.forwardEmail)
 
@@ -203,16 +205,17 @@ func TestClient_DisableWhoisGuard(t *testing.T) {
 			}))
 			defer server.Close()
 
-			client := &Client{
-				baseURL: server.URL,
-				httpClient: &http.Client{
+			config := Config{
+				APIUser:  "testuser",
+				APIKey:   "testkey",
+				Username: "testuser",
+				ClientIP: "127.0.0.1",
+				BaseURL:  server.URL,
+				HTTPClient: &http.Client{
 					Timeout: 5 * time.Second,
 				},
-				apiUser:  "testuser",
-				apiKey:   "testkey",
-				username: "testuser",
-				clientIP: "127.0.0.1",
 			}
+			client := NewClient(config)
 
 			err := client.DisableWhoisGuard(context.Background(), tt.whoisGuardID, tt.domainName)
 
@@ -249,16 +252,17 @@ func TestClient_GetWhoisGuardForDomain(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	// Test finding existing domain
 	whoisGuard, err := client.GetWhoisGuardForDomain(context.Background(), "example.com")
@@ -304,16 +308,17 @@ func TestClient_IsWhoisGuardEnabled(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := &Client{
-		baseURL: server.URL,
-		httpClient: &http.Client{
+	config := Config{
+		APIUser:  "testuser",
+		APIKey:   "testkey",
+		Username: "testuser",
+		ClientIP: "127.0.0.1",
+		BaseURL:  server.URL,
+		HTTPClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		apiUser:  "testuser",
-		apiKey:   "testkey",
-		username: "testuser",
-		clientIP: "127.0.0.1",
 	}
+	client := NewClient(config)
 
 	// Test enabled domain
 	enabled, err := client.IsWhoisGuardEnabled(context.Background(), "example.com")

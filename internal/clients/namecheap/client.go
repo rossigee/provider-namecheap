@@ -9,29 +9,38 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/go-logr/logr"
 	"github.com/pkg/errors"
 )
 
 // Client represents a Namecheap API client
 type Client struct {
-	apiUser    string
-	apiKey     string
-	username   string
-	clientIP   string
-	baseURL    string
-	httpClient *http.Client
-	sandbox    bool
+	apiUser         string
+	apiKey          string
+	username        string
+	clientIP        string
+	baseURL         string
+	httpClient      *http.Client
+	sandbox         bool
+	logger          logr.Logger
+	rateLimiter     *RateLimiter
+	circuitBreaker  *CircuitBreaker
+	retryConfig     *RetryConfig
 }
 
 // Config holds the configuration for the Namecheap client
 type Config struct {
-	APIUser    string
-	APIKey     string
-	Username   string
-	ClientIP   string
-	BaseURL    string
-	Sandbox    bool
-	HTTPClient *http.Client
+	APIUser               string
+	APIKey                string
+	Username              string
+	ClientIP              string
+	BaseURL               string
+	Sandbox               bool
+	HTTPClient            *http.Client
+	Logger                logr.Logger
+	RateLimitConfig       *RateLimitConfig
+	CircuitBreakerConfig  *CircuitBreakerConfig
+	RetryConfig           *RetryConfig
 }
 
 // NewClient creates a new Namecheap API client
@@ -50,14 +59,37 @@ func NewClient(config Config) *Client {
 		}
 	}
 
+	// Initialize production hardening features with defaults if not provided
+	rateLimitConfig := config.RateLimitConfig
+	if rateLimitConfig == nil {
+		defaultConfig := DefaultRateLimitConfig()
+		rateLimitConfig = &defaultConfig
+	}
+
+	circuitBreakerConfig := config.CircuitBreakerConfig
+	if circuitBreakerConfig == nil {
+		defaultConfig := DefaultCircuitBreakerConfig()
+		circuitBreakerConfig = &defaultConfig
+	}
+
+	retryConfig := config.RetryConfig
+	if retryConfig == nil {
+		defaultConfig := DefaultRetryConfig()
+		retryConfig = &defaultConfig
+	}
+
 	return &Client{
-		apiUser:    config.APIUser,
-		apiKey:     config.APIKey,
-		username:   config.Username,
-		clientIP:   config.ClientIP,
-		baseURL:    config.BaseURL,
-		httpClient: config.HTTPClient,
-		sandbox:    config.Sandbox,
+		apiUser:         config.APIUser,
+		apiKey:          config.APIKey,
+		username:        config.Username,
+		clientIP:        config.ClientIP,
+		baseURL:         config.BaseURL,
+		httpClient:      config.HTTPClient,
+		sandbox:         config.Sandbox,
+		logger:          config.Logger,
+		rateLimiter:     NewRateLimiter(*rateLimitConfig),
+		circuitBreaker:  NewCircuitBreaker(*circuitBreakerConfig),
+		retryConfig:     retryConfig,
 	}
 }
 
@@ -79,8 +111,33 @@ func (e Error) Error() string {
 	return fmt.Sprintf("Namecheap API Error %s: %s", e.Number, e.Description)
 }
 
-// makeRequest performs an API request to Namecheap
+// makeRequest performs an API request to Namecheap with production hardening
 func (c *Client) makeRequest(ctx context.Context, command string, params map[string]string) (*http.Response, error) {
+	var resp *http.Response
+
+	// Apply rate limiting
+	if err := c.rateLimiter.Wait(ctx); err != nil {
+		return nil, errors.Wrap(err, "rate limit exceeded")
+	}
+
+	// Execute with circuit breaker and retry logic
+	err := c.circuitBreaker.Execute(ctx, func() error {
+		return c.WithRetry(ctx, command, func(ctx context.Context) error {
+			var err error
+			resp, err = c.doHTTPRequest(ctx, command, params)
+			return err
+		})
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+// doHTTPRequest performs the actual HTTP request
+func (c *Client) doHTTPRequest(ctx context.Context, command string, params map[string]string) (*http.Response, error) {
 	values := url.Values{}
 	values.Set("ApiUser", c.apiUser)
 	values.Set("ApiKey", c.apiKey)
@@ -101,9 +158,30 @@ func (c *Client) makeRequest(ctx context.Context, command string, params map[str
 	req.URL.RawQuery = values.Encode()
 	req.Header.Set("User-Agent", "crossplane-provider-namecheap/1.0")
 
+	if c.logger.Enabled() {
+		c.logger.V(1).Info("Making API request",
+			"command", command,
+			"url", req.URL.String())
+	}
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to execute request")
+	}
+
+	// Check for HTTP-level errors that should trigger retries
+	if resp.StatusCode >= 500 {
+		return nil, &HTTPError{
+			StatusCode: resp.StatusCode,
+			Message:    fmt.Sprintf("Server error: %s", resp.Status),
+		}
+	}
+
+	if resp.StatusCode == http.StatusTooManyRequests {
+		return nil, &HTTPError{
+			StatusCode: resp.StatusCode,
+			Message:    "Rate limit exceeded",
+		}
 	}
 
 	return resp, nil
