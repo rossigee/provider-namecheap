@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: provider
-        image: ghcr.io/rossigee/provider-namecheap:v0.4.4
+        image: ghcr.io/rossigee/provider-namecheap:v0.5.0
         ports:
         - name: webhook
           containerPort: 8443

@@ -8,7 +8,7 @@
 [build]: https://github.com/rossigee/provider-namecheap/actions/workflows/ci.yml
 [releases]: https://github.com/rossigee/provider-namecheap/releases
 
-**✅ BUILD STATUS: WORKING** - Successfully builds and passes all tests (v0.4.4)
+**✅ BUILD STATUS: WORKING** - Successfully builds and passes all tests (v0.5.0)
 
 Production-hardened Crossplane provider for comprehensive Namecheap service management with full v2 support, webhook integration, and extensive API coverage.
 
@@ -44,7 +44,7 @@ This provider enables you to manage Namecheap resources declaratively using Kube
 
 ## Container Registry
 
-- **Primary**: `ghcr.io/rossigee/provider-namecheap:v0.4.4`
+- **Primary**: `ghcr.io/rossigee/provider-namecheap:v0.5.0`
 - **Harbor**: Available via environment configuration
 - **Upbound**: Available via environment configuration
 
@@ -67,7 +67,7 @@ kind: Provider
 metadata:
   name: provider-namecheap
 spec:
-  package: ghcr.io/rossigee/provider-namecheap:v0.4.4
+  package: ghcr.io/rossigee/provider-namecheap:v0.5.0
 EOF
 ```
 
