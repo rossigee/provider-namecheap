@@ -77,7 +77,22 @@ jobs:
           echo "Repository owner: ${{ github.repository_owner }}"
           echo "Version: ${VERSION}"
 
-          # Build and publish using make targets that handle Docker + Crossplane packages
+          # First build the Docker images locally (without pushing)
+          echo "🏗️  Building Docker images locally..."
+          make do.build.images REGISTRY_ORGS="ghcr.io/${{ github.repository_owner }}"
+
+          # Tag the local images with registry names for xpkg build
+          echo "🏷️  Tagging local images for registry..."
+          LOCAL_IMAGE=$(docker images --format "table {{.Repository}}:{{.Tag}}" | grep "build-" | grep provider-namecheap | head -1)
+          if [ -n "$LOCAL_IMAGE" ]; then
+            docker tag $LOCAL_IMAGE ghcr.io/${{ github.repository_owner }}/provider-namecheap:${VERSION}
+            echo "Tagged $LOCAL_IMAGE as ghcr.io/${{ github.repository_owner }}/provider-namecheap:${VERSION}"
+          else
+            echo "❌ No local provider-namecheap image found"
+            exit 1
+          fi
+
+          # Now build and publish using make targets (this will use the tagged local image for xpkg)
           make publish REGISTRY_ORGS="ghcr.io/${{ github.repository_owner }}" XPKG_REG_ORGS="ghcr.io/${{ github.repository_owner }}"
 
           echo "✅ Published to ghcr.io/${{ github.repository_owner }}"
