@@ -71,6 +71,7 @@ jobs:
         run: |
           # Use the standardized build system to handle everything
           export VERSION="${{ steps.version.outputs.version }}"
+          export BRANCH_NAME=master  # Required for RELEASE_BRANCH_FILTER in build system
 
           echo "Repository: ${{ github.repository }}"
           echo "Repository owner: ${{ github.repository_owner }}"
