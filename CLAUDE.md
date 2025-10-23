@@ -28,8 +28,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Critical First Steps
 ```bash
-# MANDATORY - Initialize build submodule (rossigee/build fork)
-git submodule add https://github.com/rossigee/build build
+# MANDATORY - Initialize build submodule
+git submodule add https://github.com/crossplane/build build
 git submodule update --init --recursive
 
 # Verify build system works
@@ -98,7 +98,7 @@ provider-namecheap/
 ├── examples/                     # v2 namespaced usage examples
 ├── cluster/images/provider-namecheap/
 │   └── Dockerfile                # MUST use ENTRYPOINT, not CMD
-├── build/                        # rossigee/build submodule
+├── build/                        # crossplane/build submodule
 └── Makefile                      # Build orchestration
 ```
 
@@ -264,7 +264,7 @@ kubectl logs -n crossplane-system deployment/provider-namecheap
 ## Common Issues and Solutions
 
 ### Build System Issues
-- **"No rule to make target 'lint'"**: Wrong build submodule - ensure using `github.com/rossigee/build`
+- **"No rule to make target 'lint'"**: Wrong build submodule - ensure using `github.com/crossplane/build`
 - **"go mod tidy needed"**: Run `go mod tidy` to update dependencies
 - **Go version errors**: Set `GO_REQUIRED_VERSION ?= 1.24` in Makefile
 
