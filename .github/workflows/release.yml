@@ -90,8 +90,16 @@ jobs:
           docker tag ghcr.io/${{ github.repository_owner }}/provider-namecheap:${VERSION} build-${BUILD_REGISTRY_ID}/provider-namecheap-amd64
           docker tag ghcr.io/${{ github.repository_owner }}/provider-namecheap:${VERSION} build-${BUILD_REGISTRY_ID}/provider-namecheap-arm64
 
-          # Now build and publish xpkg for all platforms
-          echo "📦 Building and publishing Crossplane packages..."
+          # Build binaries for both platforms (needed for xpkg)
+          echo "🔨 Building binaries for both platforms..."
+          make build.all PLATFORMS="linux_amd64 linux_arm64"
+
+          # Now build xpkg packages for both platforms
+          echo "📦 Building Crossplane packages for both platforms..."
+          make do.build.xpkgs PLATFORMS="linux_amd64 linux_arm64"
+
+          # Now publish the packages
+          echo "📤 Publishing Crossplane packages..."
           make xpkg.release.publish XPKG_REG_ORGS="ghcr.io/${{ github.repository_owner }}"
 
           echo "✅ Published to ghcr.io/${{ github.repository_owner }}"
