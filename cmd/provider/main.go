@@ -10,6 +10,7 @@ import (
 	"k8s.io/client-go/tools/leaderelection/resourcelock"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/cache"
+	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -112,6 +113,9 @@ func main() {
 	kingpin.FatalIfError(domain.Setup(mgr, o), "Cannot setup Domain controller")
 	kingpin.FatalIfError(dnsrecord.Setup(mgr, o), "Cannot setup DNSRecord controller")
 	kingpin.FatalIfError(sslcertificate.Setup(mgr, o), "Cannot setup SSLCertificate controller")
+
+	kingpin.FatalIfError(mgr.AddHealthzCheck("healthz", healthz.Ping), "Cannot add health check")
+	kingpin.FatalIfError(mgr.AddReadyzCheck("readyz", healthz.Ping), "Cannot add ready check")
 
 	ctx := ctrl.SetupSignalHandler()
 	kingpin.FatalIfError(mgr.Start(ctx), "Cannot start controller manager")
