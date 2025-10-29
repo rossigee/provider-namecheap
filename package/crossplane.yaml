@@ -28,6 +28,6 @@ metadata:
       For complete documentation, see: https://github.com/rossigee/provider-namecheap
 spec:
   controller:
-    image: ghcr.io/rossigee/provider-namecheap-amd64
+    image: ghcr.io/rossigee/provider-namecheap
   crossplane:
     version: ">=v1.18.0-0"
