@@ -2,12 +2,12 @@ package v1beta1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	xpv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
+	xpv1 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 // DNSRecordSpec defines the desired state of DNSRecord
 type DNSRecordSpec struct {
-	xpv1.ResourceSpec `json:",inline"`
+	xpv1.ManagedResourceSpec `json:",inline"`
 	ForProvider     DNSRecordParameters `json:"forProvider"`
 }
 
@@ -57,7 +57,7 @@ type DNSRecordParameters struct {
 
 // DNSRecordStatus defines the observed state of DNSRecord
 type DNSRecordStatus struct {
-	xpv1.ResourceStatus `json:",inline"`
+	xpv1.ManagedResourceStatus `json:",inline"`
 	AtProvider        DNSRecordObservation `json:"atProvider,omitempty"`
 }
 
@@ -110,10 +110,6 @@ func (mg *DNSRecord) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
 	return mg.Status.GetCondition(ct)
 }
 
-// GetDeletionPolicy of this DNSRecord.
-func (mg *DNSRecord) GetDeletionPolicy() xpv1.DeletionPolicy {
-	return mg.Spec.DeletionPolicy
-}
 
 // GetManagementPolicies of this DNSRecord.
 func (mg *DNSRecord) GetManagementPolicies() xpv1.ManagementPolicies {
@@ -121,17 +117,12 @@ func (mg *DNSRecord) GetManagementPolicies() xpv1.ManagementPolicies {
 }
 
 // GetProviderConfigReference of this DNSRecord.
-func (mg *DNSRecord) GetProviderConfigReference() *xpv1.Reference {
+func (mg *DNSRecord) GetProviderConfigReference() *xpv1.ProviderConfigReference {
 	return mg.Spec.ProviderConfigReference
 }
 
-// GetPublishConnectionDetailsTo of this DNSRecord.
-func (mg *DNSRecord) GetPublishConnectionDetailsTo() *xpv1.PublishConnectionDetailsTo {
-	return mg.Spec.PublishConnectionDetailsTo
-}
-
 // GetWriteConnectionSecretToReference of this DNSRecord.
-func (mg *DNSRecord) GetWriteConnectionSecretToReference() *xpv1.SecretReference {
+func (mg *DNSRecord) GetWriteConnectionSecretToReference() *xpv1.LocalSecretReference {
 	return mg.Spec.WriteConnectionSecretToReference
 }
 
@@ -140,10 +131,6 @@ func (mg *DNSRecord) SetConditions(c ...xpv1.Condition) {
 	mg.Status.SetConditions(c...)
 }
 
-// SetDeletionPolicy of this DNSRecord.
-func (mg *DNSRecord) SetDeletionPolicy(r xpv1.DeletionPolicy) {
-	mg.Spec.DeletionPolicy = r
-}
 
 // SetManagementPolicies of this DNSRecord.
 func (mg *DNSRecord) SetManagementPolicies(r xpv1.ManagementPolicies) {
@@ -151,17 +138,12 @@ func (mg *DNSRecord) SetManagementPolicies(r xpv1.ManagementPolicies) {
 }
 
 // SetProviderConfigReference of this DNSRecord.
-func (mg *DNSRecord) SetProviderConfigReference(r *xpv1.Reference) {
+func (mg *DNSRecord) SetProviderConfigReference(r *xpv1.ProviderConfigReference) {
 	mg.Spec.ProviderConfigReference = r
 }
 
-// SetPublishConnectionDetailsTo of this DNSRecord.
-func (mg *DNSRecord) SetPublishConnectionDetailsTo(r *xpv1.PublishConnectionDetailsTo) {
-	mg.Spec.PublishConnectionDetailsTo = r
-}
-
 // SetWriteConnectionSecretToReference of this DNSRecord.
-func (mg *DNSRecord) SetWriteConnectionSecretToReference(r *xpv1.SecretReference) {
+func (mg *DNSRecord) SetWriteConnectionSecretToReference(r *xpv1.LocalSecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
 }
 
