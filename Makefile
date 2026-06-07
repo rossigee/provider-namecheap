@@ -17,7 +17,7 @@ PLATFORMS ?= linux_amd64 linux_arm64
 override TOOLS_HOST_DIR := $(CACHE_DIR)/tools/linux_amd64
 
 # Setup Go
-GO_REQUIRED_VERSION ?= 1.26.3
+GO_REQUIRED_VERSION ?= 1.26.4.3
 # Override golangci-lint version for modern Go support
 GOLANGCILINT_VERSION ?= 2.12.2
 NPROCS ?= 1
