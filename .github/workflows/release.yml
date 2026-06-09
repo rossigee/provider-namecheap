@@ -52,13 +52,10 @@ jobs:
       - name: Vendor Dependencies
         run: go mod vendor
 
-      - name: Install Crossplane CLI
+      - name: Init build submodule and install tools
         run: |
+          git submodule update --init --depth 1 build
           make build.init
-          PLATFORM=$(go env GOOS)/$(go env GOARCH)
-          CROSSPLANE_VERSION=$(grep -E "^[\s]*CROSSPLANE_VERSION" build/Makefile | cut -d'=' -f2 | tr -d ' ')
-          curl -sSL "https://github.com/crossplane/crossplane/releases/download/${CROSSPLANE_VERSION}/crossplane-${PLATFORM}" -o .cache/tools/${PLATFORM}/crossplane-cli
-          chmod +x .cache/tools/${PLATFORM}/crossplane-cli
 
       - name: Determine Version
         id: version
