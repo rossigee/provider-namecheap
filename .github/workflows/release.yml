@@ -10,7 +10,7 @@
 #
 # Changes from 2025-09-26:
 # - Added publication verification step
-# - Confirmed PAT_TOKEN as canonical authentication variable
+# - Uses github.token for registry authentication (OIDC)
 # - Confirmed softprops/action-gh-release@v2 (not deprecated v1)
 
 name: Release
@@ -27,7 +27,7 @@ on:
         type: string
 
 env:
-  GO_VERSION: '1.25.3'
+  GO_VERSION: '1.26.4'
 
 jobs:
   release:
@@ -45,7 +45,7 @@ jobs:
           submodules: true
 
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ env.GO_VERSION }}
 
@@ -64,14 +64,14 @@ jobs:
           echo "Detected version: $VERSION"
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.PAT_TOKEN }}
+          password: ${{ github.token }}
 
       - name: Build and Publish All Artifacts
         run: |
@@ -174,7 +174,7 @@ jobs:
 #    - Ensures reproducible builds
 #
 # 5. PROPER AUTHENTICATION
-#    - Uses PAT_TOKEN (canonical variable name)
+#    - Uses github.token for authentication (OIDC, no PAT required)
 #    - Required permissions: contents:write, packages:write, id-token:write
 #    - Proper permissions for package publishing and GitHub release creation
 #
@@ -190,7 +190,7 @@ jobs:
 #
 # To apply this template:
 # 1. Copy this structure to .github/workflows/release.yml
-# 2. Ensure PAT_TOKEN secret is configured in repository settings
+# 2. Ensure github.token has packages:write permission
 # 3. Ensure Dockerfile and package/crossplane.yaml exist
 # 4. Test with a version tag (e.g., v1.0.0)
 # 5. Verify workflow passes all verification checks
