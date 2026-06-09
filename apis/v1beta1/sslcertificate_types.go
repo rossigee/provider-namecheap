@@ -145,28 +145,18 @@ func (mg *SSLCertificate) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
 	return mg.Status.GetCondition(ct)
 }
 
-// GetDeletionPolicy of this SSLCertificate.
-func (mg *SSLCertificate) GetDeletionPolicy() xpv1.DeletionPolicy {
-	return mg.Spec.DeletionPolicy
-}
-
 // GetManagementPolicies of this SSLCertificate.
 func (mg *SSLCertificate) GetManagementPolicies() xpv1.ManagementPolicies {
 	return mg.Spec.ManagementPolicies
 }
 
 // GetProviderConfigReference of this SSLCertificate.
-func (mg *SSLCertificate) GetProviderConfigReference() *xpv1.Reference {
+func (mg *SSLCertificate) GetProviderConfigReference() *xpv1.ProviderConfigReference {
 	return mg.Spec.ProviderConfigReference
 }
 
-// GetPublishConnectionDetailsTo of this SSLCertificate.
-func (mg *SSLCertificate) GetPublishConnectionDetailsTo() *xpv1.ManagementPolicies {
-	return mg.Spec.PublishConnectionDetailsTo
-}
-
 // GetWriteConnectionSecretToReference of this SSLCertificate.
-func (mg *SSLCertificate) GetWriteConnectionSecretToReference() *xpv1.SecretReference {
+func (mg *SSLCertificate) GetWriteConnectionSecretToReference() *xpv1.LocalSecretReference {
 	return mg.Spec.WriteConnectionSecretToReference
 }
 
@@ -175,28 +165,18 @@ func (mg *SSLCertificate) SetConditions(c ...xpv1.Condition) {
 	mg.Status.SetConditions(c...)
 }
 
-// SetDeletionPolicy of this SSLCertificate.
-func (mg *SSLCertificate) SetDeletionPolicy(r xpv1.DeletionPolicy) {
-	mg.Spec.DeletionPolicy = r
-}
-
 // SetManagementPolicies of this SSLCertificate.
 func (mg *SSLCertificate) SetManagementPolicies(r xpv1.ManagementPolicies) {
 	mg.Spec.ManagementPolicies = r
 }
 
 // SetProviderConfigReference of this SSLCertificate.
-func (mg *SSLCertificate) SetProviderConfigReference(r *xpv1.Reference) {
+func (mg *SSLCertificate) SetProviderConfigReference(r *xpv1.ProviderConfigReference) {
 	mg.Spec.ProviderConfigReference = r
 }
 
-// SetPublishConnectionDetailsTo of this SSLCertificate.
-func (mg *SSLCertificate) SetPublishConnectionDetailsTo(r *xpv1.ManagementPolicies) {
-	mg.Spec.PublishConnectionDetailsTo = r
-}
-
 // SetWriteConnectionSecretToReference of this SSLCertificate.
-func (mg *SSLCertificate) SetWriteConnectionSecretToReference(r *xpv1.SecretReference) {
+func (mg *SSLCertificate) SetWriteConnectionSecretToReference(r *xpv1.LocalSecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
 }
 

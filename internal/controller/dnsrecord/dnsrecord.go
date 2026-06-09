@@ -39,18 +39,15 @@ const (
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	name := managed.ControllerName(v1beta1.DNSRecordGroupKind)
 
-	cps := []managed.ConnectionPublisher{managed.NewAPISecretPublisher(mgr.GetClient(), mgr.GetScheme())}
-
 	r := managed.NewReconciler(mgr,
 		resource.ManagedKind(v1beta1.DNSRecordGroupVersionKind),
-		managed.WithExternalConnecter(&connector{
-			kube:  mgr.GetClient(),
-			usage: resource.NewProviderConfigUsageTracker(mgr.GetClient(), &v1beta1.ProviderConfigUsage{}),
+		managed.WithExternalConnector(&connector{
+			kube:   mgr.GetClient(),
+			usage:  resource.NewProviderConfigUsageTracker(mgr.GetClient(), &v1beta1.ProviderConfigUsage{}),
 		}),
 		managed.WithLogger(o.Logger.WithValues("controller", name)),
 		managed.WithPollInterval(o.PollInterval),
-		managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name))),
-		managed.WithConnectionPublishers(cps...))
+		managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name)))) //nolint:staticcheck // SA1019: required for v2 API compatibility
 
 	return ctrl.NewControllerManagedBy(mgr).
 		Named(name).
@@ -64,7 +61,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 // is called.
 type connector struct {
 	kube  client.Client
-	usage resource.Tracker
+	usage *resource.ProviderConfigUsageTracker
 }
 
 // Connect typically produces an ExternalClient by:
@@ -78,7 +75,7 @@ func (c *connector) Connect(ctx context.Context, mg resource.Managed) (managed.E
 		return nil, errors.New(errNotDNSRecord)
 	}
 
-	if err := c.usage.Track(ctx, mg); err != nil {
+	if err := c.usage.Track(ctx, cr); err != nil {
 		return nil, errors.Wrap(err, errTrackPCUsage)
 	}
 

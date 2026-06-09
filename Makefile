@@ -18,7 +18,7 @@ override TOOLS_HOST_DIR := $(CACHE_DIR)/tools/linux_amd64
 
 # Setup Go
 # Override golangci-lint version for modern Go support
-GOLANGCILINT_VERSION ?= 2.5.0
+GOLANGCILINT_VERSION ?= 2.12.2
 NPROCS ?= 1
 GO_TEST_PARALLEL := $(shell echo $$(( $(NPROCS) / 2 )))
 GO_STATIC_PACKAGES = $(GO_PROJECT)/cmd/provider

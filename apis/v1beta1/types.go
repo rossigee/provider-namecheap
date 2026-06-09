@@ -58,16 +58,16 @@ type ProviderConfigUsage struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	xpv1.ProviderConfigUsage `json:",inline"`
+	xpv1.TypedProviderConfigUsage `json:",inline"`
 }
 
 // GetProviderConfigReference of this ProviderConfigUsage.
-func (mg *ProviderConfigUsage) GetProviderConfigReference() xpv1.Reference {
+func (mg *ProviderConfigUsage) GetProviderConfigReference() xpv1.ProviderConfigReference {
 	return mg.ProviderConfigReference
 }
 
 // SetProviderConfigReference of this ProviderConfigUsage.
-func (mg *ProviderConfigUsage) SetProviderConfigReference(r xpv1.Reference) {
+func (mg *ProviderConfigUsage) SetProviderConfigReference(r xpv1.ProviderConfigReference) {
 	mg.ProviderConfigReference = r
 }
 

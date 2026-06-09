@@ -21,10 +21,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Essential Build System Setup
 
 ### Prerequisites
-- **Go 1.24+**: Required for provider development
+- **Go 1.25+**: Required for provider development (tested with 1.26.4)
 - **Docker**: For container image builds
 - **Make**: Build orchestration
 - **Git Submodules**: Critical for build system
+- **golangci-lint v2.12.2+**: For code linting
 
 ### Critical First Steps
 ```bash
