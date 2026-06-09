@@ -7,7 +7,7 @@ import (
 
 // DomainSpec defines the desired state of Domain
 type DomainSpec struct {
-	xpv1.ResourceSpec `json:",inline"`
+	xpv1.ManagedResourceSpec `json:",inline"`
 	ForProvider     DomainParameters `json:"forProvider"`
 }
 
@@ -48,7 +48,7 @@ type DomainParameters struct {
 
 // DomainStatus defines the observed state of Domain
 type DomainStatus struct {
-	xpv1.ResourceStatus `json:",inline"`
+	xpv1.ManagedResourceStatus `json:",inline"`
 	AtProvider        DomainObservation `json:"atProvider,omitempty"`
 }
 
@@ -142,7 +142,7 @@ func (mg *Domain) GetProviderConfigReference() *xpv1.Reference {
 }
 
 // GetPublishConnectionDetailsTo of this Domain.
-func (mg *Domain) GetPublishConnectionDetailsTo() *xpv1.PublishConnectionDetailsTo {
+func (mg *Domain) GetPublishConnectionDetailsTo() *xpv1.ManagementPolicies {
 	return mg.Spec.PublishConnectionDetailsTo
 }
 
@@ -172,7 +172,7 @@ func (mg *Domain) SetProviderConfigReference(r *xpv1.Reference) {
 }
 
 // SetPublishConnectionDetailsTo of this Domain.
-func (mg *Domain) SetPublishConnectionDetailsTo(r *xpv1.PublishConnectionDetailsTo) {
+func (mg *Domain) SetPublishConnectionDetailsTo(r *xpv1.ManagementPolicies) {
 	mg.Spec.PublishConnectionDetailsTo = r
 }
 

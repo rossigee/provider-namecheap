@@ -7,7 +7,7 @@ import (
 
 // DNSRecordSpec defines the desired state of DNSRecord
 type DNSRecordSpec struct {
-	xpv1.ResourceSpec `json:",inline"`
+	xpv1.ManagedResourceSpec `json:",inline"`
 	ForProvider     DNSRecordParameters `json:"forProvider"`
 }
 
@@ -57,7 +57,7 @@ type DNSRecordParameters struct {
 
 // DNSRecordStatus defines the observed state of DNSRecord
 type DNSRecordStatus struct {
-	xpv1.ResourceStatus `json:",inline"`
+	xpv1.ManagedResourceStatus `json:",inline"`
 	AtProvider        DNSRecordObservation `json:"atProvider,omitempty"`
 }
 
@@ -126,7 +126,7 @@ func (mg *DNSRecord) GetProviderConfigReference() *xpv1.Reference {
 }
 
 // GetPublishConnectionDetailsTo of this DNSRecord.
-func (mg *DNSRecord) GetPublishConnectionDetailsTo() *xpv1.PublishConnectionDetailsTo {
+func (mg *DNSRecord) GetPublishConnectionDetailsTo() *xpv1.ManagementPolicies {
 	return mg.Spec.PublishConnectionDetailsTo
 }
 
@@ -156,7 +156,7 @@ func (mg *DNSRecord) SetProviderConfigReference(r *xpv1.Reference) {
 }
 
 // SetPublishConnectionDetailsTo of this DNSRecord.
-func (mg *DNSRecord) SetPublishConnectionDetailsTo(r *xpv1.PublishConnectionDetailsTo) {
+func (mg *DNSRecord) SetPublishConnectionDetailsTo(r *xpv1.ManagementPolicies) {
 	mg.Spec.PublishConnectionDetailsTo = r
 }
 

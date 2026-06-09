@@ -7,7 +7,7 @@ import (
 
 // SSLCertificateSpec defines the desired state of SSLCertificate
 type SSLCertificateSpec struct {
-	xpv1.ResourceSpec `json:",inline"`
+	xpv1.ManagedResourceSpec `json:",inline"`
 	ForProvider       SSLCertificateParameters `json:"forProvider"`
 }
 
@@ -60,7 +60,7 @@ type SSLCertificateParameters struct {
 
 // SSLCertificateStatus defines the observed state of SSLCertificate
 type SSLCertificateStatus struct {
-	xpv1.ResourceStatus `json:",inline"`
+	xpv1.ManagedResourceStatus `json:",inline"`
 	AtProvider          SSLCertificateObservation `json:"atProvider,omitempty"`
 }
 
@@ -161,7 +161,7 @@ func (mg *SSLCertificate) GetProviderConfigReference() *xpv1.Reference {
 }
 
 // GetPublishConnectionDetailsTo of this SSLCertificate.
-func (mg *SSLCertificate) GetPublishConnectionDetailsTo() *xpv1.PublishConnectionDetailsTo {
+func (mg *SSLCertificate) GetPublishConnectionDetailsTo() *xpv1.ManagementPolicies {
 	return mg.Spec.PublishConnectionDetailsTo
 }
 
@@ -191,7 +191,7 @@ func (mg *SSLCertificate) SetProviderConfigReference(r *xpv1.Reference) {
 }
 
 // SetPublishConnectionDetailsTo of this SSLCertificate.
-func (mg *SSLCertificate) SetPublishConnectionDetailsTo(r *xpv1.PublishConnectionDetailsTo) {
+func (mg *SSLCertificate) SetPublishConnectionDetailsTo(r *xpv1.ManagementPolicies) {
 	mg.Spec.PublishConnectionDetailsTo = r
 }
 
