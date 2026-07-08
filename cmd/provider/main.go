@@ -51,7 +51,6 @@ func main() {
 	shutdownTracing := tracing.Init("provider-namecheap")
 	defer shutdownTracing(context.Background())
 
-	shutdownTracing(context.Background())
 
 	// currently, we configure the jitter to be the 5% of the poll interval
 	pollJitter := time.Duration(float64(*pollInterval) * 0.05)
