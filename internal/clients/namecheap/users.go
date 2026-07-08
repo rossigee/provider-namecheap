@@ -2,17 +2,16 @@ package namecheap
 
 import (
 	"context"
-
 	"github.com/pkg/errors"
 )
 
 // UserBalance represents account balance information
 type UserBalance struct {
-	Currency          string  `xml:"Currency,attr"`
-	AvailableBalance  float64 `xml:"AvailableBalance,attr"`
-	AccountBalance    float64 `xml:"AccountBalance,attr"`
-	EarnedAmount      float64 `xml:"EarnedAmount,attr"`
-	WithdrawableAmount float64 `xml:"WithdrawableAmount,attr"`
+	Currency                  string  `xml:"Currency,attr"`
+	AvailableBalance          float64 `xml:"AvailableBalance,attr"`
+	AccountBalance            float64 `xml:"AccountBalance,attr"`
+	EarnedAmount              float64 `xml:"EarnedAmount,attr"`
+	WithdrawableAmount        float64 `xml:"WithdrawableAmount,attr"`
 	FundsRequiredForAutoRenew float64 `xml:"FundsRequiredForAutoRenew,attr"`
 }
 
@@ -26,33 +25,33 @@ type UserBalanceResponse struct {
 
 // TLD represents a top-level domain with pricing information
 type TLD struct {
-	Name                string  `xml:"Name,attr"`
-	NonRealTime         bool    `xml:"NonRealTime,attr"`
-	MinRegisterYears    int     `xml:"MinRegisterYears,attr"`
-	MaxRegisterYears    int     `xml:"MaxRegisterYears,attr"`
-	MinRenewYears       int     `xml:"MinRenewYears,attr"`
-	MaxRenewYears       int     `xml:"MaxRenewYears,attr"`
-	MinTransferYears    int     `xml:"MinTransferYears,attr"`
-	MaxTransferYears    int     `xml:"MaxTransferYears,attr"`
-	IsApiRegisterable   bool    `xml:"IsApiRegisterable,attr"`
-	IsApiRenewable      bool    `xml:"IsApiRenewable,attr"`
-	IsApiTransferable   bool    `xml:"IsApiTransferable,attr"`
-	IsEppRequired       bool    `xml:"IsEppRequired,attr"`
-	IsDisableModContact bool    `xml:"IsDisableModContact,attr"`
-	IsDisableWGAllot    bool    `xml:"IsDisableWGAllot,attr"`
-	IsIncludeInExtendedSearchOnly bool `xml:"IsIncludeInExtendedSearchOnly,attr"`
-	SequenceNumber      int     `xml:"SequenceNumber,attr"`
-	Type                string  `xml:"Type,attr"`
-	SubType             string  `xml:"SubType,attr"`
-	IsSupportsIDN       bool    `xml:"IsSupportsIDN,attr"`
-	Category            string  `xml:"Category,attr"`
-	SupportsRegistrarLock bool  `xml:"SupportsRegistrarLock,attr"`
-	AddGracePeriodFee   float64 `xml:"AddGracePeriodFee,attr"`
-	WhoisVerification   bool    `xml:"WhoisVerification,attr"`
-	ProviderApiDelete   bool    `xml:"ProviderApiDelete,attr"`
-	TldState            string  `xml:"TldState,attr"`
-	SearchGroup         string  `xml:"SearchGroup,attr"`
-	Registry            string  `xml:"Registry,attr"`
+	Name                          string  `xml:"Name,attr"`
+	NonRealTime                   bool    `xml:"NonRealTime,attr"`
+	MinRegisterYears              int     `xml:"MinRegisterYears,attr"`
+	MaxRegisterYears              int     `xml:"MaxRegisterYears,attr"`
+	MinRenewYears                 int     `xml:"MinRenewYears,attr"`
+	MaxRenewYears                 int     `xml:"MaxRenewYears,attr"`
+	MinTransferYears              int     `xml:"MinTransferYears,attr"`
+	MaxTransferYears              int     `xml:"MaxTransferYears,attr"`
+	IsApiRegisterable             bool    `xml:"IsApiRegisterable,attr"`
+	IsApiRenewable                bool    `xml:"IsApiRenewable,attr"`
+	IsApiTransferable             bool    `xml:"IsApiTransferable,attr"`
+	IsEppRequired                 bool    `xml:"IsEppRequired,attr"`
+	IsDisableModContact           bool    `xml:"IsDisableModContact,attr"`
+	IsDisableWGAllot              bool    `xml:"IsDisableWGAllot,attr"`
+	IsIncludeInExtendedSearchOnly bool    `xml:"IsIncludeInExtendedSearchOnly,attr"`
+	SequenceNumber                int     `xml:"SequenceNumber,attr"`
+	Type                          string  `xml:"Type,attr"`
+	SubType                       string  `xml:"SubType,attr"`
+	IsSupportsIDN                 bool    `xml:"IsSupportsIDN,attr"`
+	Category                      string  `xml:"Category,attr"`
+	SupportsRegistrarLock         bool    `xml:"SupportsRegistrarLock,attr"`
+	AddGracePeriodFee             float64 `xml:"AddGracePeriodFee,attr"`
+	WhoisVerification             bool    `xml:"WhoisVerification,attr"`
+	ProviderApiDelete             bool    `xml:"ProviderApiDelete,attr"`
+	TldState                      string  `xml:"TldState,attr"`
+	SearchGroup                   string  `xml:"SearchGroup,attr"`
+	Registry                      string  `xml:"Registry,attr"`
 }
 
 // TLDListResponse represents the response from domains.getTldList
@@ -67,17 +66,17 @@ type TLDListResponse struct {
 
 // PricingType represents pricing information for a TLD
 type PricingType struct {
-	Name              string  `xml:"Name,attr"`
-	Price             float64 `xml:"Price,attr"`
-	RegularPrice      float64 `xml:"RegularPrice,attr"`
-	YourPrice         float64 `xml:"YourPrice,attr"`
-	YourPriceRange    string  `xml:"YourPriceRange,attr"`
-	PromoPrice        float64 `xml:"PromoPrice,attr"`
-	Currency          string  `xml:"Currency,attr"`
-	Duration          int     `xml:"Duration,attr"`
-	DurationType      string  `xml:"DurationType,attr"`
-	PricingType       string  `xml:"PricingType,attr"`
-	AdditionalCost    float64 `xml:"AdditionalCost,attr"`
+	Name           string  `xml:"Name,attr"`
+	Price          float64 `xml:"Price,attr"`
+	RegularPrice   float64 `xml:"RegularPrice,attr"`
+	YourPrice      float64 `xml:"YourPrice,attr"`
+	YourPriceRange string  `xml:"YourPriceRange,attr"`
+	PromoPrice     float64 `xml:"PromoPrice,attr"`
+	Currency       string  `xml:"Currency,attr"`
+	Duration       int     `xml:"Duration,attr"`
+	DurationType   string  `xml:"DurationType,attr"`
+	PricingType    string  `xml:"PricingType,attr"`
+	AdditionalCost float64 `xml:"AdditionalCost,attr"`
 }
 
 // UserPricingResponse represents the response from users.getPricing

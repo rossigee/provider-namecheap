@@ -1,9 +1,10 @@
 package v1beta1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	xpv1 "github.com/crossplane/crossplane/apis/v2/core/v2"
+	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	"github.com/crossplane/crossplane/apis/v2/core/v2"
 )
+
 
 // DNSRecordSpec defines the desired state of DNSRecord
 type DNSRecordSpec struct {
@@ -145,6 +146,4 @@ func (mg *DNSRecord) SetWriteConnectionSecretToReference(r *xpv1.LocalSecretRefe
 	mg.Spec.WriteConnectionSecretToReference = r
 }
 
-func init() {
-	SchemeBuilder.Register(&DNSRecord{}, &DNSRecordList{})
 }

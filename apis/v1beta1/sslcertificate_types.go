@@ -1,9 +1,10 @@
 package v1beta1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	xpv1 "github.com/crossplane/crossplane/apis/v2/core/v2"
+	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	"github.com/crossplane/crossplane/apis/v2/core/v2"
 )
+
 
 // SSLCertificateSpec defines the desired state of SSLCertificate
 type SSLCertificateSpec struct {
@@ -180,6 +181,4 @@ func (mg *SSLCertificate) SetWriteConnectionSecretToReference(r *xpv1.LocalSecre
 	mg.Spec.WriteConnectionSecretToReference = r
 }
 
-func init() {
-	SchemeBuilder.Register(&SSLCertificate{}, &SSLCertificateList{})
 }

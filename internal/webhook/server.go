@@ -7,14 +7,13 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/go-logr/logr"
+	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 	"io"
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/go-logr/logr"
-	"github.com/gorilla/mux"
-	"github.com/pkg/errors"
 )
 
 // Server represents a webhook server for processing Namecheap events
@@ -29,14 +28,14 @@ type Server struct {
 
 // Config holds webhook server configuration
 type Config struct {
-	Port          int
-	Path          string
-	Secret        string
-	Logger        logr.Logger
-	TLSCertFile   string
-	TLSKeyFile    string
-	ReadTimeout   time.Duration
-	WriteTimeout  time.Duration
+	Port         int
+	Path         string
+	Secret       string
+	Logger       logr.Logger
+	TLSCertFile  string
+	TLSKeyFile   string
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
 }
 
 // DefaultConfig returns sensible defaults for webhook server
@@ -54,26 +53,26 @@ type EventType string
 
 const (
 	// Domain events
-	EventDomainRegistered   EventType = "domain.registered"
-	EventDomainRenewed      EventType = "domain.renewed"
-	EventDomainExpired      EventType = "domain.expired"
-	EventDomainTransferred  EventType = "domain.transferred"
+	EventDomainRegistered  EventType = "domain.registered"
+	EventDomainRenewed     EventType = "domain.renewed"
+	EventDomainExpired     EventType = "domain.expired"
+	EventDomainTransferred EventType = "domain.transferred"
 
 	// DNS events
-	EventDNSRecordCreated   EventType = "dns.record.created"
-	EventDNSRecordUpdated   EventType = "dns.record.updated"
-	EventDNSRecordDeleted   EventType = "dns.record.deleted"
+	EventDNSRecordCreated EventType = "dns.record.created"
+	EventDNSRecordUpdated EventType = "dns.record.updated"
+	EventDNSRecordDeleted EventType = "dns.record.deleted"
 
 	// SSL events
-	EventSSLIssued          EventType = "ssl.issued"
-	EventSSLRenewed         EventType = "ssl.renewed"
-	EventSSLExpired         EventType = "ssl.expired"
-	EventSSLRevoked         EventType = "ssl.revoked"
+	EventSSLIssued  EventType = "ssl.issued"
+	EventSSLRenewed EventType = "ssl.renewed"
+	EventSSLExpired EventType = "ssl.expired"
+	EventSSLRevoked EventType = "ssl.revoked"
 
 	// Account events
-	EventAccountUpdated     EventType = "account.updated"
-	EventPaymentReceived    EventType = "payment.received"
-	EventPaymentFailed      EventType = "payment.failed"
+	EventAccountUpdated  EventType = "account.updated"
+	EventPaymentReceived EventType = "payment.received"
+	EventPaymentFailed   EventType = "payment.failed"
 )
 
 // WebhookEvent represents a Namecheap webhook event

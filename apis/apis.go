@@ -1,9 +1,8 @@
 package apis
 
 import (
-	"k8s.io/apimachinery/pkg/runtime"
-
 	"github.com/rossigee/provider-namecheap/apis/v1beta1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func init() {

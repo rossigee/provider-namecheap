@@ -7,13 +7,13 @@ import (
 
 // Metrics provides observability for webhook operations
 type Metrics struct {
-	mu                sync.RWMutex
-	RequestsTotal     *Counter
-	RequestsErrors    *Counter
-	ProcessingErrors  *Counter
-	EventsProcessed   *Counter
-	RequestDuration   *Histogram
-	lastReset         time.Time
+	mu               sync.RWMutex
+	RequestsTotal    *Counter
+	RequestsErrors   *Counter
+	ProcessingErrors *Counter
+	EventsProcessed  *Counter
+	RequestDuration  *Histogram
+	lastReset        time.Time
 }
 
 // Counter represents a simple counter metric
@@ -100,14 +100,14 @@ func (m *Metrics) GetAll() map[string]interface{} {
 	defer m.mu.RUnlock()
 
 	return map[string]interface{}{
-		"requests_total":        m.RequestsTotal.Value(),
-		"requests_errors":       m.RequestsErrors.Value(),
-		"processing_errors":     m.ProcessingErrors.Value(),
-		"events_processed":      m.EventsProcessed.Value(),
-		"request_duration_avg":  m.RequestDuration.Average(),
-		"request_count":         m.RequestDuration.Count(),
-		"uptime_seconds":        time.Since(m.lastReset).Seconds(),
-		"last_reset":            m.lastReset.Format(time.RFC3339),
+		"requests_total":       m.RequestsTotal.Value(),
+		"requests_errors":      m.RequestsErrors.Value(),
+		"processing_errors":    m.ProcessingErrors.Value(),
+		"events_processed":     m.EventsProcessed.Value(),
+		"request_duration_avg": m.RequestDuration.Average(),
+		"request_count":        m.RequestDuration.Count(),
+		"uptime_seconds":       time.Since(m.lastReset).Seconds(),
+		"last_reset":           m.lastReset.Format(time.RFC3339),
 	}
 }
 

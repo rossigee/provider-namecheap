@@ -2,10 +2,9 @@ package namecheap
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"strconv"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 // WhoisGuard represents a WhoisGuard privacy protection service
@@ -15,9 +14,9 @@ type WhoisGuard struct {
 	Created      string `xml:"Created,attr"`
 	Status       string `xml:"Status,attr"`
 	EmailDetails struct {
-		ForwardedTo     string `xml:"ForwardedTo,attr"`
+		ForwardedTo       string `xml:"ForwardedTo,attr"`
 		LastAutoEmailDate string `xml:"LastAutoEmailDate,attr"`
-		AutoEmailCount  int    `xml:"AutoEmailCount,attr"`
+		AutoEmailCount    int    `xml:"AutoEmailCount,attr"`
 	} `xml:"EmailDetails"`
 }
 

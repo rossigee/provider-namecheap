@@ -2,13 +2,12 @@ package namecheap
 
 import (
 	"context"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestClient_GetWhoisGuards(t *testing.T) {
@@ -68,12 +67,12 @@ func TestClient_GetWhoisGuards(t *testing.T) {
 
 func TestClient_EnableWhoisGuard(t *testing.T) {
 	tests := []struct {
-		name           string
-		whoisGuardID   int
-		domainName     string
-		forwardEmail   string
-		responseXML    string
-		expectedError  string
+		name          string
+		whoisGuardID  int
+		domainName    string
+		forwardEmail  string
+		responseXML   string
+		expectedError string
 	}{
 		{
 			name:         "successful enable",
@@ -159,11 +158,11 @@ func TestClient_EnableWhoisGuard(t *testing.T) {
 
 func TestClient_DisableWhoisGuard(t *testing.T) {
 	tests := []struct {
-		name           string
-		whoisGuardID   int
-		domainName     string
-		responseXML    string
-		expectedError  string
+		name          string
+		whoisGuardID  int
+		domainName    string
+		responseXML   string
+		expectedError string
 	}{
 		{
 			name:         "successful disable",

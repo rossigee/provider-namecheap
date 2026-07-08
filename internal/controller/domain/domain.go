@@ -3,24 +3,21 @@ package domain
 import (
 	"context"
 	"encoding/json"
-	"strconv"
-
-	"github.com/pkg/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
-	xpv1 "github.com/crossplane/crossplane/apis/v2/core/v2"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/controller"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/event"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/meta"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/ratelimiter"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/reconciler/managed"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/resource"
-
+	"github.com/crossplane/crossplane/apis/v2/core/v2"
+	"github.com/pkg/errors"
 	"github.com/rossigee/provider-namecheap/apis/v1beta1"
 	"github.com/rossigee/provider-namecheap/internal/clients/namecheap"
+	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"strconv"
 )
 
 const (
@@ -29,12 +26,12 @@ const (
 	errGetPC        = "cannot get ProviderConfig"
 	errGetCreds     = "cannot get credentials"
 
-	errNewClient        = "cannot create new Service"
-	errCreateDomain     = "cannot create domain"
-	errUpdateDomain     = "cannot update domain"
-	errDeleteDomain     = "cannot delete domain"
-	errGetDomain        = "cannot get domain"
-	errSetNameservers   = "cannot set nameservers"
+	errNewClient      = "cannot create new Service"
+	errCreateDomain   = "cannot create domain"
+	errUpdateDomain   = "cannot update domain"
+	errDeleteDomain   = "cannot delete domain"
+	errGetDomain      = "cannot get domain"
+	errSetNameservers = "cannot set nameservers"
 )
 
 // Setup adds a controller that reconciles Domain managed resources.
@@ -44,12 +41,12 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 	r := managed.NewReconciler(mgr,
 		resource.ManagedKind(v1beta1.DomainGroupVersionKind),
 		managed.WithExternalConnector(&connector{
-			kube:   mgr.GetClient(),
-			usage:  resource.NewProviderConfigUsageTracker(mgr.GetClient(), &v1beta1.ProviderConfigUsage{}),
+			kube:  mgr.GetClient(),
+			usage: resource.NewProviderConfigUsageTracker(mgr.GetClient(), &v1beta1.ProviderConfigUsage{}),
 		}),
 		managed.WithLogger(o.Logger.WithValues("controller", name)),
 		managed.WithPollInterval(o.PollInterval),
-		managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorder(name))))  // SA1019: required for v2 API compatibility
+		managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorder(name)))) // SA1019: required for v2 API compatibility
 
 	return ctrl.NewControllerManagedBy(mgr).
 		Named(name).

@@ -3,32 +3,31 @@ package webhook
 import (
 	"context"
 	"fmt"
-	"time"
-
 	"github.com/go-logr/logr"
+	"time"
 )
 
 // WebhookConfig represents the configuration for webhook endpoints
 type WebhookConfig struct {
 	// Endpoint configuration
-	URL              string        `json:"url"`
-	Secret           string        `json:"secret"`
-	Events           []EventType   `json:"events"`
-	Active           bool          `json:"active"`
+	URL    string      `json:"url"`
+	Secret string      `json:"secret"`
+	Events []EventType `json:"events"`
+	Active bool        `json:"active"`
 
 	// HTTP configuration
-	Timeout          time.Duration `json:"timeout"`
-	MaxRetries       int           `json:"max_retries"`
-	RetryDelay       time.Duration `json:"retry_delay"`
+	Timeout    time.Duration `json:"timeout"`
+	MaxRetries int           `json:"max_retries"`
+	RetryDelay time.Duration `json:"retry_delay"`
 
 	// Security configuration
-	VerifySSL        bool          `json:"verify_ssl"`
-	UserAgent        string        `json:"user_agent"`
+	VerifySSL bool   `json:"verify_ssl"`
+	UserAgent string `json:"user_agent"`
 
 	// Metadata
-	Description      string        `json:"description"`
-	CreatedAt        time.Time     `json:"created_at"`
-	UpdatedAt        time.Time     `json:"updated_at"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 // DefaultWebhookConfig returns sensible defaults for webhook configuration

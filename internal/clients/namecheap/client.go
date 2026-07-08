@@ -4,43 +4,42 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
+	"github.com/go-logr/logr"
+	"github.com/pkg/errors"
 	"io"
 	"net/http"
 	"net/url"
 	"time"
-
-	"github.com/go-logr/logr"
-	"github.com/pkg/errors"
 )
 
 // Client represents a Namecheap API client
 type Client struct {
-	apiUser         string
-	apiKey          string
-	username        string
-	clientIP        string
-	baseURL         string
-	httpClient      *http.Client
-	sandbox         bool
-	logger          logr.Logger
-	rateLimiter     *RateLimiter
-	circuitBreaker  *CircuitBreaker
-	retryConfig     *RetryConfig
+	apiUser        string
+	apiKey         string
+	username       string
+	clientIP       string
+	baseURL        string
+	httpClient     *http.Client
+	sandbox        bool
+	logger         logr.Logger
+	rateLimiter    *RateLimiter
+	circuitBreaker *CircuitBreaker
+	retryConfig    *RetryConfig
 }
 
 // Config holds the configuration for the Namecheap client
 type Config struct {
-	APIUser               string
-	APIKey                string
-	Username              string
-	ClientIP              string
-	BaseURL               string
-	Sandbox               bool
-	HTTPClient            *http.Client
-	Logger                logr.Logger
-	RateLimitConfig       *RateLimitConfig
-	CircuitBreakerConfig  *CircuitBreakerConfig
-	RetryConfig           *RetryConfig
+	APIUser              string
+	APIKey               string
+	Username             string
+	ClientIP             string
+	BaseURL              string
+	Sandbox              bool
+	HTTPClient           *http.Client
+	Logger               logr.Logger
+	RateLimitConfig      *RateLimitConfig
+	CircuitBreakerConfig *CircuitBreakerConfig
+	RetryConfig          *RetryConfig
 }
 
 // NewClient creates a new Namecheap API client
@@ -79,17 +78,17 @@ func NewClient(config Config) *Client {
 	}
 
 	return &Client{
-		apiUser:         config.APIUser,
-		apiKey:          config.APIKey,
-		username:        config.Username,
-		clientIP:        config.ClientIP,
-		baseURL:         config.BaseURL,
-		httpClient:      config.HTTPClient,
-		sandbox:         config.Sandbox,
-		logger:          config.Logger,
-		rateLimiter:     NewRateLimiter(*rateLimitConfig),
-		circuitBreaker:  NewCircuitBreaker(*circuitBreakerConfig),
-		retryConfig:     retryConfig,
+		apiUser:        config.APIUser,
+		apiKey:         config.APIKey,
+		username:       config.Username,
+		clientIP:       config.ClientIP,
+		baseURL:        config.BaseURL,
+		httpClient:     config.HTTPClient,
+		sandbox:        config.Sandbox,
+		logger:         config.Logger,
+		rateLimiter:    NewRateLimiter(*rateLimitConfig),
+		circuitBreaker: NewCircuitBreaker(*circuitBreakerConfig),
+		retryConfig:    retryConfig,
 	}
 }
 

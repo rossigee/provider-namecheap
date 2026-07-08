@@ -1,11 +1,11 @@
 package v1beta1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-
-	xpv1 "github.com/crossplane/crossplane/apis/v2/core/v2"
+	"github.com/crossplane/crossplane/apis/v2/core/v2"
 )
+
 
 const (
 	Group   = "namecheap.m.crossplane.io"
@@ -89,7 +89,4 @@ type ProviderConfigUsageList struct {
 	Items           []ProviderConfigUsage `json:"items"`
 }
 
-
-func init() {
-	SchemeBuilder.Register(&ProviderConfigUsage{}, &ProviderConfigUsageList{})
 }

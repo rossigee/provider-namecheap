@@ -2,25 +2,24 @@ package namecheap
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/pkg/errors"
 )
 
 // SSLCertificate represents an SSL certificate
 type SSLCertificate struct {
-	CertificateID   int       `xml:"CertificateID,attr"`
-	HostName        string    `xml:"HostName,attr"`
-	SSLType         string    `xml:"SSLType,attr"`
-	PurchaseDate    time.Time `xml:"PurchaseDate,attr"`
-	ExpireDate      time.Time `xml:"ExpireDate,attr"`
+	CertificateID        int       `xml:"CertificateID,attr"`
+	HostName             string    `xml:"HostName,attr"`
+	SSLType              string    `xml:"SSLType,attr"`
+	PurchaseDate         time.Time `xml:"PurchaseDate,attr"`
+	ExpireDate           time.Time `xml:"ExpireDate,attr"`
 	ActivationExpireDate time.Time `xml:"ActivationExpireDate,attr"`
-	IsExpiredYN     bool      `xml:"IsExpiredYN,attr"`
-	Status          string    `xml:"Status,attr"`
-	StatusDescription string  `xml:"StatusDescription,attr"`
-	Years           int       `xml:"Years,attr"`
+	IsExpiredYN          bool      `xml:"IsExpiredYN,attr"`
+	Status               string    `xml:"Status,attr"`
+	StatusDescription    string    `xml:"StatusDescription,attr"`
+	Years                int       `xml:"Years,attr"`
 }
 
 // SSLListResponse represents the response from ssl.getList
@@ -38,11 +37,11 @@ type SSLCreateResponse struct {
 	APIResponse
 	CommandResponse struct {
 		SSLCreateResult struct {
-			IsSuccess     bool    `xml:"IsSuccess,attr"`
-			OrderID       int     `xml:"OrderID,attr"`
-			TransactionID int     `xml:"TransactionID,attr"`
-			ChargedAmount float64 `xml:"ChargedAmount,attr"`
-			SSLCertificateID int  `xml:"SSLCertificateID,attr"`
+			IsSuccess        bool    `xml:"IsSuccess,attr"`
+			OrderID          int     `xml:"OrderID,attr"`
+			TransactionID    int     `xml:"TransactionID,attr"`
+			ChargedAmount    float64 `xml:"ChargedAmount,attr"`
+			SSLCertificateID int     `xml:"SSLCertificateID,attr"`
 		} `xml:"SSLCreateResult"`
 	} `xml:"CommandResponse"`
 }
@@ -52,8 +51,8 @@ type SSLActivateResponse struct {
 	APIResponse
 	CommandResponse struct {
 		SSLActivateResult struct {
-			IsSuccess bool   `xml:"IsSuccess,attr"`
-			ID        int    `xml:"ID,attr"`
+			IsSuccess bool `xml:"IsSuccess,attr"`
+			ID        int  `xml:"ID,attr"`
 		} `xml:"SSLActivateResult"`
 	} `xml:"CommandResponse"`
 }
@@ -74,11 +73,11 @@ type SSLGetInfoResponse struct {
 			StatusDescription    string    `xml:"StatusDescription,attr"`
 			Years                int       `xml:"Years,attr"`
 			Provider             struct {
-				Name            string `xml:"Name,attr"`
-				DisplayName     string `xml:"DisplayName,attr"`
-				LogoURL         string `xml:"LogoURL,attr"`
+				Name        string `xml:"Name,attr"`
+				DisplayName string `xml:"DisplayName,attr"`
+				LogoURL     string `xml:"LogoURL,attr"`
 			} `xml:"Provider"`
-			ApproverEmailList    []string `xml:"ApproverEmailList>Email"`
+			ApproverEmailList []string `xml:"ApproverEmailList>Email"`
 		} `xml:"SSLGetInfoResult"`
 	} `xml:"CommandResponse"`
 }
@@ -263,7 +262,7 @@ func (c *Client) GetSSLCertificatesByDomain(ctx context.Context, domainName stri
 	var domainCertificates []SSLCertificate
 	for _, cert := range certificates {
 		if strings.EqualFold(cert.HostName, domainName) ||
-		   strings.HasSuffix(strings.ToLower(cert.HostName), "."+strings.ToLower(domainName)) {
+			strings.HasSuffix(strings.ToLower(cert.HostName), "."+strings.ToLower(domainName)) {
 			domainCertificates = append(domainCertificates, cert)
 		}
 	}

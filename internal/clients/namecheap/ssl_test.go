@@ -2,13 +2,12 @@ package namecheap
 
 import (
 	"context"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestClient_GetSSLCertificates(t *testing.T) {
@@ -163,16 +162,16 @@ func TestClient_CreateSSLCertificate(t *testing.T) {
 
 func TestClient_ActivateSSLCertificate(t *testing.T) {
 	tests := []struct {
-		name               string
-		certificateID      int
-		csr               string
-		domainName        string
-		approverEmail     string
-		httpDCValidation  string
-		dnsValidation     string
-		webServerType     string
-		responseXML       string
-		expectedError     string
+		name             string
+		certificateID    int
+		csr              string
+		domainName       string
+		approverEmail    string
+		httpDCValidation string
+		dnsValidation    string
+		webServerType    string
+		responseXML      string
+		expectedError    string
 	}{
 		{
 			name:          "successful activation",
@@ -188,13 +187,13 @@ func TestClient_ActivateSSLCertificate(t *testing.T) {
 </ApiResponse>`,
 		},
 		{
-			name:             "activation with DNS validation",
-			certificateID:    123,
-			csr:             "-----BEGIN CERTIFICATE REQUEST-----\nMIICZjCCAU4...\n-----END CERTIFICATE REQUEST-----",
-			domainName:      "example.com",
-			approverEmail:   "admin@example.com",
-			dnsValidation:   "DNS_CNAME",
-			webServerType:   "Apache",
+			name:          "activation with DNS validation",
+			certificateID: 123,
+			csr:           "-----BEGIN CERTIFICATE REQUEST-----\nMIICZjCCAU4...\n-----END CERTIFICATE REQUEST-----",
+			domainName:    "example.com",
+			approverEmail: "admin@example.com",
+			dnsValidation: "DNS_CNAME",
+			webServerType: "Apache",
 			responseXML: `<?xml version="1.0" encoding="UTF-8"?>
 <ApiResponse Status="OK">
 	<CommandResponse>

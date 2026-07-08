@@ -2,20 +2,19 @@ package namecheap
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"strconv"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 // DNSRecord represents a DNS record in Namecheap
 type DNSRecord struct {
-	HostID     int    `xml:"HostId,attr"`
-	Name       string `xml:"Name,attr"`
-	Type       string `xml:"Type,attr"`
-	Address    string `xml:"Address,attr"`
-	MXPref     int    `xml:"MXPref,attr"`
-	TTL        int    `xml:"TTL,attr"`
+	HostID             int    `xml:"HostId,attr"`
+	Name               string `xml:"Name,attr"`
+	Type               string `xml:"Type,attr"`
+	Address            string `xml:"Address,attr"`
+	MXPref             int    `xml:"MXPref,attr"`
+	TTL                int    `xml:"TTL,attr"`
 	AssociatedAppTitle string `xml:"AssociatedAppTitle,attr"`
 	FriendlyName       string `xml:"FriendlyName,attr"`
 	IsActive           bool   `xml:"IsActive,attr"`
@@ -27,9 +26,9 @@ type DNSHostsResponse struct {
 	APIResponse
 	CommandResponse struct {
 		DomainDNSGetHostsResult struct {
-			Domain    string      `xml:"Domain,attr"`
-			IsUsingOurDNS bool    `xml:"IsUsingOurDNS,attr"`
-			Hosts     []DNSRecord `xml:"host"`
+			Domain        string      `xml:"Domain,attr"`
+			IsUsingOurDNS bool        `xml:"IsUsingOurDNS,attr"`
+			Hosts         []DNSRecord `xml:"host"`
 		} `xml:"DomainDNSGetHostsResult"`
 	} `xml:"CommandResponse"`
 }
@@ -112,7 +111,7 @@ func (c *Client) UpdateDNSRecord(ctx context.Context, domainName string, record 
 	found := false
 	for i, existingRecord := range existingRecords {
 		if existingRecord.HostID == record.HostID ||
-		   (existingRecord.Name == record.Name && existingRecord.Type == record.Type) {
+			(existingRecord.Name == record.Name && existingRecord.Type == record.Type) {
 			existingRecords[i] = record
 			found = true
 			break

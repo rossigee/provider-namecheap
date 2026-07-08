@@ -2,26 +2,25 @@ package namecheap
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/pkg/errors"
 )
 
 // Domain represents a domain in Namecheap
 type Domain struct {
-	ID             int       `xml:"ID,attr"`
-	Name           string    `xml:"Name,attr"`
-	User           string    `xml:"User,attr"`
-	Created        time.Time `xml:"Created,attr"`
-	Expires        time.Time `xml:"Expires,attr"`
-	IsExpired      bool      `xml:"IsExpired,attr"`
-	IsLocked       bool      `xml:"IsLocked,attr"`
-	AutoRenew      bool      `xml:"AutoRenew,attr"`
-	WhoisGuard     string    `xml:"WhoisGuard,attr"`
-	IsPremium      bool      `xml:"IsPremium,attr"`
-	IsOurDNS       bool      `xml:"IsOurDNS,attr"`
+	ID         int       `xml:"ID,attr"`
+	Name       string    `xml:"Name,attr"`
+	User       string    `xml:"User,attr"`
+	Created    time.Time `xml:"Created,attr"`
+	Expires    time.Time `xml:"Expires,attr"`
+	IsExpired  bool      `xml:"IsExpired,attr"`
+	IsLocked   bool      `xml:"IsLocked,attr"`
+	AutoRenew  bool      `xml:"AutoRenew,attr"`
+	WhoisGuard string    `xml:"WhoisGuard,attr"`
+	IsPremium  bool      `xml:"IsPremium,attr"`
+	IsOurDNS   bool      `xml:"IsOurDNS,attr"`
 }
 
 // DomainListResponse represents the response from domains.getList
@@ -54,14 +53,14 @@ type DomainCreateResponse struct {
 	APIResponse
 	CommandResponse struct {
 		DomainCreateResult struct {
-			Domain                 string  `xml:"Domain,attr"`
-			Registered             bool    `xml:"Registered,attr"`
-			ChargedAmount          float64 `xml:"ChargedAmount,attr"`
-			DomainID               int     `xml:"DomainID,attr"`
-			OrderID                int     `xml:"OrderID,attr"`
-			TransactionID          int     `xml:"TransactionID,attr"`
-			WhoisGuardEnable       bool    `xml:"WhoisguardEnable,attr"`
-			NonRealTimeDomain      bool    `xml:"NonRealTimeDomain,attr"`
+			Domain            string  `xml:"Domain,attr"`
+			Registered        bool    `xml:"Registered,attr"`
+			ChargedAmount     float64 `xml:"ChargedAmount,attr"`
+			DomainID          int     `xml:"DomainID,attr"`
+			OrderID           int     `xml:"OrderID,attr"`
+			TransactionID     int     `xml:"TransactionID,attr"`
+			WhoisGuardEnable  bool    `xml:"WhoisguardEnable,attr"`
+			NonRealTimeDomain bool    `xml:"NonRealTimeDomain,attr"`
 		} `xml:"DomainCreateResult"`
 	} `xml:"CommandResponse"`
 }
@@ -144,8 +143,8 @@ func (c *Client) SetNameservers(ctx context.Context, domainName string, nameserv
 	}
 
 	params := map[string]string{
-		"SLD": strings.Split(domainName, ".")[0],
-		"TLD": strings.Join(strings.Split(domainName, ".")[1:], "."),
+		"SLD":         strings.Split(domainName, ".")[0],
+		"TLD":         strings.Join(strings.Split(domainName, ".")[1:], "."),
 		"Nameservers": strings.Join(nameservers, ","),
 	}
 
@@ -187,11 +186,11 @@ type DomainCheckResponse struct {
 	CommandResponse struct {
 		DomainCheckResult struct {
 			Domains []struct {
-				Domain      string `xml:"Domain,attr"`
-				Available   bool   `xml:"Available,attr"`
-				ErrorCode   string `xml:"ErrorCode,attr"`
-				Description string `xml:"Description,attr"`
-				IsPremium   bool   `xml:"IsPremium,attr"`
+				Domain                   string  `xml:"Domain,attr"`
+				Available                bool    `xml:"Available,attr"`
+				ErrorCode                string  `xml:"ErrorCode,attr"`
+				Description              string  `xml:"Description,attr"`
+				IsPremium                bool    `xml:"IsPremium,attr"`
 				PremiumRegistrationPrice float64 `xml:"PremiumRegistrationPrice,attr"`
 				PremiumRenewalPrice      float64 `xml:"PremiumRenewalPrice,attr"`
 				PremiumRestorePrice      float64 `xml:"PremiumRestorePrice,attr"`
@@ -205,11 +204,11 @@ type DomainCheckResponse struct {
 
 // DomainCheckResult represents a single domain availability check result
 type DomainCheckResult struct {
-	Domain      string
-	Available   bool
-	ErrorCode   string
-	Description string
-	IsPremium   bool
+	Domain                   string
+	Available                bool
+	ErrorCode                string
+	Description              string
+	IsPremium                bool
 	PremiumRegistrationPrice float64
 	PremiumRenewalPrice      float64
 	PremiumRestorePrice      float64

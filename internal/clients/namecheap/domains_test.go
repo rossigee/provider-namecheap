@@ -2,26 +2,25 @@ package namecheap
 
 import (
 	"context"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestClient_RenewDomain(t *testing.T) {
 	tests := []struct {
-		name           string
-		domainName     string
-		years          int
-		renewXML       string
-		getInfoXML     string
-		expectedError  string
-		expectSuccess  bool
+		name          string
+		domainName    string
+		years         int
+		renewXML      string
+		getInfoXML    string
+		expectedError string
+		expectSuccess bool
 	}{
 		{
 			name:       "successful domain renewal",
@@ -130,11 +129,11 @@ func TestClient_RenewDomain(t *testing.T) {
 
 func TestClient_CheckDomainAvailability(t *testing.T) {
 	tests := []struct {
-		name           string
-		domainNames    []string
-		responseXML    string
-		expectedCount  int
-		expectedError  string
+		name          string
+		domainNames   []string
+		responseXML   string
+		expectedCount int
+		expectedError string
 	}{
 		{
 			name:        "single domain available",

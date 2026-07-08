@@ -3,13 +3,12 @@ package namecheap
 import (
 	"context"
 	"fmt"
+	"github.com/pkg/errors"
 	"math"
 	"math/rand"
 	"net"
 	"net/http"
 	"time"
-
-	"github.com/pkg/errors"
 )
 
 // RetryConfig defines retry behavior for API calls
@@ -106,10 +105,10 @@ func (c *Client) isRetryableError(err error) bool {
 	if errors.As(err, &httpErr) {
 		switch httpErr.StatusCode {
 		case http.StatusTooManyRequests,
-			 http.StatusInternalServerError,
-			 http.StatusBadGateway,
-			 http.StatusServiceUnavailable,
-			 http.StatusGatewayTimeout:
+			http.StatusInternalServerError,
+			http.StatusBadGateway,
+			http.StatusServiceUnavailable,
+			http.StatusGatewayTimeout:
 			return true
 		}
 	}
