@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -24,6 +25,7 @@ import (
 	"github.com/rossigee/provider-namecheap/internal/controller/domain"
 	"github.com/rossigee/provider-namecheap/internal/controller/dnsrecord"
 	"github.com/rossigee/provider-namecheap/internal/controller/sslcertificate"
+	"github.com/rossigee/provider-namecheap/internal/tracing"
 	"github.com/rossigee/provider-namecheap/internal/version"
 )
 
@@ -45,6 +47,11 @@ func main() {
 	zl := zap.New(zap.UseDevMode(*debug))
 	ctrl.SetLogger(zl)
 	log := logging.NewLogrLogger(zl.WithName("provider-namecheap"))
+
+	shutdownTracing := tracing.Init("provider-namecheap")
+	defer shutdownTracing(context.Background())
+
+	shutdownTracing(context.Background())
 
 	// currently, we configure the jitter to be the 5% of the poll interval
 	pollJitter := time.Duration(float64(*pollInterval) * 0.05)
