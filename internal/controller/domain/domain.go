@@ -49,7 +49,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		}),
 		managed.WithLogger(o.Logger.WithValues("controller", name)),
 		managed.WithPollInterval(o.PollInterval),
-		managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name)))) //nolint:staticcheck // SA1019: required for v2 API compatibility
+		managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorder(name))))  // SA1019: required for v2 API compatibility
 
 	return ctrl.NewControllerManagedBy(mgr).
 		Named(name).
