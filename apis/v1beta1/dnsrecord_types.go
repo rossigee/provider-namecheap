@@ -1,8 +1,8 @@
 package v1beta1
 
 import (
-	"k8s.io/apimachinery/pkg/apis/meta/v1"
-	"github.com/crossplane/crossplane/apis/v2/core/v2"
+	xpv1 "github.com/crossplane/crossplane/apis/v2/core/v2"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 
@@ -144,6 +144,4 @@ func (mg *DNSRecord) SetProviderConfigReference(r *xpv1.ProviderConfigReference)
 // SetWriteConnectionSecretToReference of this DNSRecord.
 func (mg *DNSRecord) SetWriteConnectionSecretToReference(r *xpv1.LocalSecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
-}
-
 }

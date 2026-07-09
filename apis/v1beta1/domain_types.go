@@ -1,8 +1,8 @@
 package v1beta1
 
 import (
-	"k8s.io/apimachinery/pkg/apis/meta/v1"
-	"github.com/crossplane/crossplane/apis/v2/core/v2"
+	xpv1 "github.com/crossplane/crossplane/apis/v2/core/v2"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 
@@ -101,7 +101,7 @@ type DomainObservation struct {
 // +kubebuilder:resource:scope=Namespaced,categories={crossplane,managed,namecheap}
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
-// +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
+// +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
 
 // Domain is the Schema for the domains API
@@ -160,6 +160,4 @@ func (mg *Domain) SetProviderConfigReference(r *xpv1.ProviderConfigReference) {
 // SetWriteConnectionSecretToReference of this Domain.
 func (mg *Domain) SetWriteConnectionSecretToReference(r *xpv1.LocalSecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
-}
-
 }

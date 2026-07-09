@@ -5,11 +5,17 @@ package v1beta1
 
 import (
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+)
+
+const (
+	Group   = "namecheap.m.crossplane.io"
+	Version = "v1beta1"
 )
 
 var (
-	// GroupVersion is group version used to register these objects
-	GroupVersion = schema.GroupVersion{Group: "namecheap.m.crossplane.io", Version: "v1beta1"}
+	// SchemeGroupVersion is group version used to register these objects
+	SchemeGroupVersion = schema.GroupVersion{Group: Group, Version: Version}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
@@ -19,5 +25,13 @@ var (
 )
 
 func addKnownTypes(s *runtime.Scheme) error {
+	s.AddKnownTypes(SchemeGroupVersion,
+		&Domain{},
+		&DomainList{},
+		&ProviderConfig{},
+		&ProviderConfigList{},
+		&ProviderConfigUsage{},
+		&ProviderConfigUsageList{},
+	)
 	return nil
 }

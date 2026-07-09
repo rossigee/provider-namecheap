@@ -1,8 +1,8 @@
 package v1beta1
 
 import (
-	"k8s.io/apimachinery/pkg/apis/meta/v1"
-	"github.com/crossplane/crossplane/apis/v2/core/v2"
+	xpv1 "github.com/crossplane/crossplane/apis/v2/core/v2"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 
@@ -59,6 +59,4 @@ type ProviderConfigList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ProviderConfig `json:"items"`
-}
-
 }

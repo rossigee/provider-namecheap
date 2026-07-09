@@ -1,51 +1,11 @@
 package v1beta1
 
 import (
-	"k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-	"github.com/crossplane/crossplane/apis/v2/core/v2"
+	xpv1 "github.com/crossplane/crossplane/apis/v2/core/v2"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 
-const (
-	Group   = "namecheap.m.crossplane.io"
-	Version = "v1beta1"
-)
-
-var (
-	// SchemeGroupVersion is group version used to register these objects
-	SchemeGroupVersion = schema.GroupVersion{Group: Group, Version: Version}
-
-	// Domain
-	DomainKind             = "Domain"
-	DomainGroupKind        = schema.GroupKind{Group: Group, Kind: DomainKind}.String()
-	DomainKindAPIVersion   = DomainKind + "." + SchemeGroupVersion.String()
-	DomainGroupVersionKind = SchemeGroupVersion.WithKind(DomainKind)
-
-	// DNSRecord
-	DNSRecordKind             = "DNSRecord"
-	DNSRecordGroupKind        = schema.GroupKind{Group: Group, Kind: DNSRecordKind}.String()
-	DNSRecordKindAPIVersion   = DNSRecordKind + "." + SchemeGroupVersion.String()
-	DNSRecordGroupVersionKind = SchemeGroupVersion.WithKind(DNSRecordKind)
-
-	// ProviderConfig
-	ProviderConfigKind             = "ProviderConfig"
-	ProviderConfigGroupKind        = schema.GroupKind{Group: Group, Kind: ProviderConfigKind}.String()
-	ProviderConfigKindAPIVersion   = ProviderConfigKind + "." + SchemeGroupVersion.String()
-	ProviderConfigGroupVersionKind = SchemeGroupVersion.WithKind(ProviderConfigKind)
-
-	// ProviderConfigUsage
-	ProviderConfigUsageKind             = "ProviderConfigUsage"
-	ProviderConfigUsageGroupKind        = schema.GroupKind{Group: Group, Kind: ProviderConfigUsageKind}.String()
-	ProviderConfigUsageKindAPIVersion   = ProviderConfigUsageKind + "." + SchemeGroupVersion.String()
-	ProviderConfigUsageGroupVersionKind = SchemeGroupVersion.WithKind(ProviderConfigUsageKind)
-
-	// SSLCertificate
-	SSLCertificateKind             = "SSLCertificate"
-	SSLCertificateGroupKind        = schema.GroupKind{Group: Group, Kind: SSLCertificateKind}.String()
-	SSLCertificateKindAPIVersion   = SSLCertificateKind + "." + SchemeGroupVersion.String()
-	SSLCertificateGroupVersionKind = SchemeGroupVersion.WithKind(SSLCertificateKind)
-)
 
 // A ProviderConfigUsage indicates that a resource is using a ProviderConfig.
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
@@ -87,6 +47,4 @@ type ProviderConfigUsageList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ProviderConfigUsage `json:"items"`
-}
-
 }
