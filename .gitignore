@@ -32,3 +32,4 @@ kubeconfig
 Thumbs.db
 # Cache directories
 .cache/
+vendor/
