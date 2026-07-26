@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY_ORGS: ghcr.io/rossigee
-  GO_REQUIRED_VERSION: 1.26.4
+  GO_REQUIRED_VERSION: 1.26.5
 
 permissions:
   packages: write
@@ -97,7 +97,6 @@ jobs:
             apiVersion: pkg.crossplane.io/v1
             kind: Provider
             metadata:
-        allowUpdates: true
               name: provider-namecheap
             spec:
               package: ${{ env.REGISTRY_ORGS }}/provider-namecheap:${{ steps.version.outputs.version }}
