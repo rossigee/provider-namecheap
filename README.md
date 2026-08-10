@@ -48,7 +48,7 @@ This provider enables you to manage Namecheap resources declaratively using Kube
 - **Harbor**: Available via environment configuration
 - **Upbound**: Available via environment configuration
 
-## Quick Start
+## Getting Started
 
 ### Prerequisites
 
@@ -71,7 +71,7 @@ spec:
 EOF
 ```
 
-### Available Resources
+## Resource Types
 
 | Resource | API Version | Scope | Description |
 |----------|-------------|-------|-------------|
