@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
-	"github.com/go-logr/logr"
-	"github.com/pkg/errors"
 	"io"
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/go-logr/logr"
+	"github.com/pkg/errors"
 )
 
 // Client represents a Namecheap API client

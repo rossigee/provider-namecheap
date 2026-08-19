@@ -2,10 +2,11 @@ package namecheap
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 // Domain represents a domain in Namecheap

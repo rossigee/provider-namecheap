@@ -3,12 +3,13 @@ package namecheap
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
 	"math"
 	"math/rand"
 	"net"
 	"net/http"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 // RetryConfig defines retry behavior for API calls

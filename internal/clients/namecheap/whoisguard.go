@@ -2,9 +2,10 @@ package namecheap
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"strconv"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 // WhoisGuard represents a WhoisGuard privacy protection service

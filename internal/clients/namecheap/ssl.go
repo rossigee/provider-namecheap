@@ -2,10 +2,11 @@ package namecheap
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 // SSLCertificate represents an SSL certificate

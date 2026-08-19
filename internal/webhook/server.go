@@ -7,13 +7,14 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/go-logr/logr"
-	"github.com/gorilla/mux"
-	"github.com/pkg/errors"
 	"io"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/go-logr/logr"
+	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 )
 
 // Server represents a webhook server for processing Namecheap events

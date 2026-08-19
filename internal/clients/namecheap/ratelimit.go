@@ -3,9 +3,10 @@ package namecheap
 import (
 	"context"
 	"fmt"
-	"golang.org/x/time/rate"
 	"sync"
 	"time"
+
+	"golang.org/x/time/rate"
 )
 
 // RateLimiter manages API rate limiting to prevent hitting Namecheap limits

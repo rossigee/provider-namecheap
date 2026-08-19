@@ -3,8 +3,9 @@ package webhook
 import (
 	"context"
 	"fmt"
-	"github.com/go-logr/logr"
 	"time"
+
+	"github.com/go-logr/logr"
 )
 
 // WebhookConfig represents the configuration for webhook endpoints
