@@ -5,11 +5,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-
 // SSLCertificateSpec defines the desired state of SSLCertificate
 type SSLCertificateSpec struct {
 	xpv1.ManagedResourceSpec `json:",inline"`
-	ForProvider       SSLCertificateParameters `json:"forProvider"`
+	ForProvider              SSLCertificateParameters `json:"forProvider"`
 }
 
 // SSLCertificateParameters are the configurable fields of an SSLCertificate.
@@ -62,7 +61,7 @@ type SSLCertificateParameters struct {
 // SSLCertificateStatus defines the observed state of SSLCertificate
 type SSLCertificateStatus struct {
 	xpv1.ManagedResourceStatus `json:",inline"`
-	AtProvider          SSLCertificateObservation `json:"atProvider,omitempty"`
+	AtProvider                 SSLCertificateObservation `json:"atProvider,omitempty"`
 }
 
 // SSLCertificateObservation are the observable fields of an SSLCertificate.

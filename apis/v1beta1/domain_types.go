@@ -5,11 +5,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-
 // DomainSpec defines the desired state of Domain
 type DomainSpec struct {
 	xpv1.ManagedResourceSpec `json:",inline"`
-	ForProvider     DomainParameters `json:"forProvider"`
+	ForProvider              DomainParameters `json:"forProvider"`
 }
 
 // DomainParameters are the configurable fields of a Domain.
@@ -50,7 +49,7 @@ type DomainParameters struct {
 // DomainStatus defines the observed state of Domain
 type DomainStatus struct {
 	xpv1.ManagedResourceStatus `json:",inline"`
-	AtProvider        DomainObservation `json:"atProvider,omitempty"`
+	AtProvider                 DomainObservation `json:"atProvider,omitempty"`
 }
 
 // DomainObservation are the observable fields of a Domain.

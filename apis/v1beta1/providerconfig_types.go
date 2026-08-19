@@ -5,7 +5,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-
 // ProviderConfigSpec defines the desired state of ProviderConfig
 type ProviderConfigSpec struct {
 	// Credentials required to authenticate to the Namecheap API.
@@ -33,7 +32,7 @@ type ProviderCredentials struct {
 // ProviderConfigStatus defines the observed state of ProviderConfig
 type ProviderConfigStatus struct {
 	xpv1.ConditionedStatus `json:",inline"`
-	UserCount            *int64 `json:"userCount,omitempty"`
+	UserCount              *int64 `json:"userCount,omitempty"`
 }
 
 // +kubebuilder:object:root=true

@@ -5,11 +5,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-
 // DNSRecordSpec defines the desired state of DNSRecord
 type DNSRecordSpec struct {
 	xpv1.ManagedResourceSpec `json:",inline"`
-	ForProvider     DNSRecordParameters `json:"forProvider"`
+	ForProvider              DNSRecordParameters `json:"forProvider"`
 }
 
 // DNSRecordParameters are the configurable fields of a DNSRecord.
@@ -59,7 +58,7 @@ type DNSRecordParameters struct {
 // DNSRecordStatus defines the observed state of DNSRecord
 type DNSRecordStatus struct {
 	xpv1.ManagedResourceStatus `json:",inline"`
-	AtProvider        DNSRecordObservation `json:"atProvider,omitempty"`
+	AtProvider                 DNSRecordObservation `json:"atProvider,omitempty"`
 }
 
 // DNSRecordObservation are the observable fields of a DNSRecord.
