@@ -12,7 +12,9 @@ import (
 	"github.com/crossplane/crossplane-runtime/v2/pkg/feature"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/logging"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/ratelimiter"
+	"github.com/crossplane/crossplane-runtime/v2/pkg/statemetrics"
 	"github.com/rossigee/provider-namecheap/apis"
+	"github.com/rossigee/provider-namecheap/apis/v1beta1"
 	"github.com/rossigee/provider-namecheap/internal/controller/dnsrecord"
 	"github.com/rossigee/provider-namecheap/internal/controller/domain"
 	"github.com/rossigee/provider-namecheap/internal/controller/sslcertificate"
@@ -23,6 +25,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"sigs.k8s.io/controller-runtime/pkg/metrics"
 	"sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
@@ -38,6 +41,8 @@ func main() {
 		namespace                  = app.Flag("namespace", "Namespace used to set as default scope in default secret store config.").Default("crossplane-system").String()
 		enableExternalSecretStores = app.Flag("enable-external-secret-stores", "Enable support for external secret stores.").Default("false").Bool()
 		enableManagementPolicies   = app.Flag("enable-management-policies", "Enable support for Management Policies.").Default("true").Bool()
+		pollStateMetricInterval    = app.Flag("poll-state-metric", "State metric recording interval").Default("5s").Duration()
+		metricsBindAddress         = app.Flag("metrics-bind-address", "The address the metrics endpoint binds to.").Default(":8080").String()
 	)
 
 	kingpin.MustParse(app.Parse(os.Args[1:]))
@@ -87,18 +92,28 @@ func main() {
 			CertDir: os.Getenv("WEBHOOK_TLS_CERT_DIR"),
 		}),
 		Metrics: server.Options{
-			BindAddress: ":8080",
+			BindAddress: *metricsBindAddress,
 		},
 	})
 	kingpin.FatalIfError(err, "Cannot create controller manager")
 
 	featureFlags := &feature.Flags{}
+
+	mrStateMetrics := statemetrics.NewMRStateMetrics()
+	metrics.Registry.MustRegister(mrStateMetrics)
+
+	mo := controller.MetricOptions{
+		PollStateMetricInterval: *pollStateMetricInterval,
+		MRStateMetrics:          mrStateMetrics,
+	}
+
 	o := controller.Options{
 		Logger:                  log,
 		MaxConcurrentReconciles: *maxReconcileRate,
 		PollInterval:            *pollInterval,
 		GlobalRateLimiter:       ratelimiter.NewGlobal(*maxReconcileRate),
 		Features:                featureFlags,
+		MetricOptions:           &mo,
 	}
 
 	if *enableExternalSecretStores {
@@ -116,6 +131,10 @@ func main() {
 	kingpin.FatalIfError(domain.Setup(mgr, o), "Cannot setup Domain controller")
 	kingpin.FatalIfError(dnsrecord.Setup(mgr, o), "Cannot setup DNSRecord controller")
 	kingpin.FatalIfError(sslcertificate.Setup(mgr, o), "Cannot setup SSLCertificate controller")
+
+	kingpin.FatalIfError(mgr.Add(statemetrics.NewMRStateRecorder(mgr.GetClient(), o.Logger, o.MetricOptions.MRStateMetrics, &v1beta1.DomainList{}, o.MetricOptions.PollStateMetricInterval)), "Cannot register state metrics for Domain")
+	kingpin.FatalIfError(mgr.Add(statemetrics.NewMRStateRecorder(mgr.GetClient(), o.Logger, o.MetricOptions.MRStateMetrics, &v1beta1.DNSRecordList{}, o.MetricOptions.PollStateMetricInterval)), "Cannot register state metrics for DNSRecord")
+	kingpin.FatalIfError(mgr.Add(statemetrics.NewMRStateRecorder(mgr.GetClient(), o.Logger, o.MetricOptions.MRStateMetrics, &v1beta1.SSLCertificateList{}, o.MetricOptions.PollStateMetricInterval)), "Cannot register state metrics for SSLCertificate")
 
 	kingpin.FatalIfError(mgr.AddHealthzCheck("healthz", healthz.Ping), "Cannot add health check")
 	kingpin.FatalIfError(mgr.AddReadyzCheck("readyz", healthz.Ping), "Cannot add ready check")
