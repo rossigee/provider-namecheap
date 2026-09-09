@@ -22,6 +22,8 @@ img.build:
 img.build.shared:
 	@cp Dockerfile $(IMAGE_TEMP_DIR)
 	@cp -r $(OUTPUT_DIR)/bin/ $(IMAGE_TEMP_DIR)/
+	@cp ../../../package/crossplane.yaml $(IMAGE_TEMP_DIR)/package.yaml
+	@cp -r ../../../package/crds $(IMAGE_TEMP_DIR)/crds
 	@docker build $(BUILD_ARGS) --build-arg TARGETOS=$(TARGETOS) --build-arg TARGETARCH=$(TARGETARCH) -t $(IMAGE) $(IMAGE_TEMP_DIR)
 
 # ====================================================================================
@@ -31,9 +33,11 @@ ifeq ($(findstring $(COMMA),$(IMAGE_PLATFORMS)),$(COMMA))
 	@$(INFO) building and pushing multiarch image $(IMAGE) for platforms $(IMAGE_PLATFORMS)
 	@$(MAKE) -C ../../.. go.build PLATFORM=linux_amd64
 	@$(MAKE) -C ../../.. go.build PLATFORM=linux_arm64
-	@cp Dockerfile $(IMAGE_TEMP_DIR)
-	@cp -r $(OUTPUT_DIR)/bin/ $(IMAGE_TEMP_DIR)/
-	@docker buildx create --use --name multiarch-builder 2>/dev/null || docker buildx use multiarch-builder
+ @cp Dockerfile $(IMAGE_TEMP_DIR)
+ 		@cp -r $(OUTPUT_DIR)/bin/ $(IMAGE_TEMP_DIR)/
+ 		@cp ../../../package/crossplane.yaml $(IMAGE_TEMP_DIR)/package.yaml
+ 		@cp -r ../../../package/crds $(IMAGE_TEMP_DIR)/crds
+ 		@docker buildx create --use --name multiarch-builder 2>/dev/null || docker buildx use multiarch-builder
 	@docker buildx build $(BUILD_ARGS) \
 		--platform $(IMAGE_PLATFORMS) \
 		--tag $(IMAGE) \
