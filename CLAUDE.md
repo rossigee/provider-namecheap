@@ -203,7 +203,7 @@ spec:
   deletionPolicy: Delete
 
 # Managed Resource Definition (MRD) example
-apiVersion: meta.pkg.crossplane.io/v1alpha1
+apiVersion: meta.pkg.crossplane.io/v1
 kind: ManagedResource
 metadata:
   name: domain.namecheap.m.crossplane.io
@@ -292,7 +292,7 @@ kubectl describe domain example-com
 ### Code Organization
 - Controllers in `internal/controller/` with dedicated subdirectories
 - API clients in `internal/clients/namecheap/`
-- Types in `apis/v1alpha1/` with proper Go struct tags
+- Types in `apis/v1beta1/` with proper Go struct tags
 - Examples in `examples/` directory with working manifests
 
 ### Error Handling

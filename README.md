@@ -80,6 +80,10 @@ EOF
 | `SSLCertificate` | `namecheap.m.crossplane.io/v1beta1` | Namespaced | SSL certificate lifecycle management |
 | `ProviderConfig` | `namecheap.m.crossplane.io/v1beta1` | Namespaced | Provider configuration |
 
+## API Coverage Gaps
+
+Namecheap API surface not yet modeled: domain `check`/`reactivate` pre-operations, premium DNS subscriptions, standalone WhoisGuard resources (currently domain fields only), URL forwarding/email forwarding records, and user/account balance queries.
+
 2. **Create a secret with your Namecheap API credentials:**
 
 ```bash
@@ -128,7 +132,6 @@ spec:
       - ns2.example.com
   providerConfigRef:
     name: default
-  deletionPolicy: Delete
 ```
 
 #### DNS Record Management
@@ -148,7 +151,6 @@ spec:
     ttl: 300
   providerConfigRef:
     name: default
-  deletionPolicy: Delete
 ```
 
 ## API Reference
@@ -233,7 +235,6 @@ spec:
     webServerType: apache
   providerConfigRef:
     name: default
-  deletionPolicy: Delete
 ```
 
 #### WhoisGuard Privacy Protection
@@ -252,7 +253,6 @@ spec:
     privacyProtection: true  # Enable WhoisGuard privacy
   providerConfigRef:
     name: default
-  deletionPolicy: Delete
 ```
 
 ### Advanced SSL Certificate Operations
@@ -545,7 +545,6 @@ spec:
     registrationYears: 1
   providerConfigRef:
     name: default
-  deletionPolicy: Delete
 EOF
 
 # Check resource status

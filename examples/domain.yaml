@@ -14,4 +14,3 @@ spec:
     privacyProtection: true
   providerConfigRef:
     name: default
-  deletionPolicy: Delete

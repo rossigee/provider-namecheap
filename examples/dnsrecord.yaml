@@ -12,7 +12,6 @@ spec:
     ttl: 300
   providerConfigRef:
     name: default
-  deletionPolicy: Delete
 ---
 apiVersion: namecheap.m.crossplane.io/v1beta1
 kind: DNSRecord
@@ -29,7 +28,6 @@ spec:
     priority: 10
   providerConfigRef:
     name: default
-  deletionPolicy: Delete
 ---
 apiVersion: namecheap.m.crossplane.io/v1beta1
 kind: DNSRecord
@@ -45,4 +43,3 @@ spec:
     ttl: 3600
   providerConfigRef:
     name: default
-  deletionPolicy: Delete
