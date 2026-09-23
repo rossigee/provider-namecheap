@@ -44,8 +44,6 @@ XPKGS = $(PROJECT_NAME)
 # Override xpkg.build target to ensure CROSSPLANE_CLI dependency
 xpkg.build.$(PROJECT_NAME): $(CROSSPLANE_CLI)
 
-# Add missing docker.build target for CI compatibility
-docker.build: do.build.images
 # Ensure publish only happens on release branches
 publish.artifacts: $(CROSSPLANE_CLI)
 	@if ! echo "$(BRANCH_NAME)" | grep -qE "$(subst $(SPACE),|,main|master|release-.*)"; then \ 
