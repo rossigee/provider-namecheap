@@ -1,6 +1,7 @@
 # Project Setup
 PROJECT_NAME := provider-namecheap
 PROJECT_REPO := github.com/rossigee/$(PROJECT_NAME)
+CROSSPLANE_VERSION = 2.5.0
 
 # Platform support
 PLATFORMS ?= linux_amd64 linux_arm64

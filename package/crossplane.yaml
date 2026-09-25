@@ -30,4 +30,4 @@ spec:
   controller:
     image: ghcr.io/rossigee/provider-namecheap
   crossplane:
-    version: ">=v1.18.0-0"
+    version: ">=v2.5.0"
