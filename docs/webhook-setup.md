@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
       - name: provider
-        image: ghcr.io/rossigee/provider-namecheap:v0.5.3
+        image: ghcr.io/rossigee/provider-namecheap:v0.7.5
         env:
         # Enable webhook server
         - name: WEBHOOK_ENABLED
@@ -105,19 +105,7 @@ kubectl create secret generic namecheap-webhook-secret \
 
 ### 3. Configure TLS Certificates
 
-Generate TLS certificates for the webhook server:
-
-```bash
-# Generate TLS certificates
-openssl req -x509 -newkey rsa:4096 -keyout tls.key -out tls.crt -days 365 -nodes \
-  -subj "/CN=provider-namecheap-webhook.crossplane-system.svc.cluster.local"
-
-# Create TLS secret
-kubectl create secret tls namecheap-webhook-certs \
-  --cert=tls.crt \
-  --key=tls.key \
-  -n crossplane-system
-```
+Use a cluster-approved certificate issuer to create the webhook certificate. Do not generate or deploy a self-signed certificate. Configure the resulting `kubernetes.io/tls` Secret for the provider webhook service.
 
 ### 4. Expose Webhook Service
 

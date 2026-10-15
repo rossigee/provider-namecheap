@@ -239,7 +239,7 @@ go test -v -run TestDomain  # Run specific test function
 ### Build Verification
 ```bash
 # Check Docker image has correct ENTRYPOINT
-docker inspect ghcr.io/rossigee/provider-namecheap-amd64 | jq -r '.[0].Config.Entrypoint'
+docker inspect ghcr.io/rossigee/provider-namecheap:v0.7.5 | jq -r '.[0].Config.Entrypoint'
 # Should show: ["/usr/local/bin/provider"]
 
 # Verify .xpkg package contains Docker image
@@ -309,7 +309,7 @@ kubectl describe domain example-com
 
 ## Version Compatibility
 
-**Crossplane Version**: v1.20+ required (v2 features)
+**Crossplane Version**: v2.5.0+ required
 **Go Version**: 1.24+
 **Kubernetes**: 1.28+
 

@@ -8,7 +8,7 @@
 [build]: https://github.com/rossigee/provider-namecheap/actions/workflows/ci.yml
 [releases]: https://github.com/rossigee/provider-namecheap/releases
 
-**✅ BUILD STATUS: WORKING** - Successfully builds and passes all tests (v0.5.3)
+**✅ BUILD STATUS: WORKING** - Successfully builds and passes all tests (v0.7.5)
 
 Production-hardened Crossplane provider for comprehensive Namecheap service management with full v2 support, webhook integration, and extensive API coverage.
 
@@ -44,15 +44,13 @@ This provider enables you to manage Namecheap resources declaratively using Kube
 
 ## Container Registry
 
-- **Primary**: `ghcr.io/rossigee/provider-namecheap:v0.5.3`
-- **Harbor**: Available via environment configuration
-- **Upbound**: Available via environment configuration
+- **Primary**: `ghcr.io/rossigee/provider-namecheap:v0.7.5`
 
 ## Getting Started
 
 ### Prerequisites
 
-- Kubernetes cluster with [Crossplane](https://crossplane.io/) v1.18.0+ installed
+- Kubernetes cluster with [Crossplane](https://crossplane.io/) v2.5.0+ installed
 - Namecheap account with API access enabled
 - Your Namecheap API credentials
 
@@ -67,7 +65,7 @@ kind: Provider
 metadata:
   name: provider-namecheap
 spec:
-  package: ghcr.io/rossigee/provider-namecheap:v0.5.3
+  package: ghcr.io/rossigee/provider-namecheap:v0.7.5
 EOF
 ```
 
@@ -78,7 +76,7 @@ EOF
 | `Domain` | `namecheap.m.crossplane.io/v1beta1` | Namespaced | Domain registration and management |
 | `DNSRecord` | `namecheap.m.crossplane.io/v1beta1` | Namespaced | DNS record management |
 | `SSLCertificate` | `namecheap.m.crossplane.io/v1beta1` | Namespaced | SSL certificate lifecycle management |
-| `ProviderConfig` | `namecheap.m.crossplane.io/v1beta1` | Namespaced | Provider configuration |
+| `ProviderConfig` | `namecheap.m.crossplane.io/v1beta1` | Cluster-scoped | Provider configuration |
 
 ## API Coverage Gaps
 
