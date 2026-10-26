@@ -26,7 +26,7 @@ GO_STATIC_PACKAGES = $(GO_PROJECT)/cmd/provider
 GO_LDFLAGS += -X $(GO_PROJECT)/internal/version.Version=$(VERSION)
 GO_SUBDIRS += apis
 GO111MODULE = on
-GO_REQUIRED_VERSION ?= 1.27.2
+GO_REQUIRED_VERSION ?= 1.27.3
 -include build/makelib/golang.mk
 
 # Setup Images
