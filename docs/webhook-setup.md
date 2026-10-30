@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
       - name: provider
-        image: ghcr.io/rossigee/provider-namecheap:v0.7.5
+        image: ghcr.io/rossigee/provider-namecheap:v0.7.6
         env:
         # Enable webhook server
         - name: WEBHOOK_ENABLED

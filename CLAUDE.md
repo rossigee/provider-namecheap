@@ -239,7 +239,7 @@ go test -v -run TestDomain  # Run specific test function
 ### Build Verification
 ```bash
 # Check Docker image has correct ENTRYPOINT
-docker inspect ghcr.io/rossigee/provider-namecheap:v0.7.5 | jq -r '.[0].Config.Entrypoint'
+docker inspect ghcr.io/rossigee/provider-namecheap:v0.7.6 | jq -r '.[0].Config.Entrypoint'
 # Should show: ["/usr/local/bin/provider"]
 
 # Verify .xpkg package contains Docker image
