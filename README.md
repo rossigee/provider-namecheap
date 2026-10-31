@@ -44,7 +44,7 @@ This provider enables you to manage Namecheap resources declaratively using Kube
 
 ## Container Registry
 
-- **Primary**: `ghcr.io/rossigee/provider-namecheap:v0.7.5`
+- **Primary**: `ghcr.io/rossigee/provider-namecheap:v0.7.6`
 
 ## Getting Started
 
@@ -65,7 +65,7 @@ kind: Provider
 metadata:
   name: provider-namecheap
 spec:
-  package: ghcr.io/rossigee/provider-namecheap:v0.7.5
+  package: ghcr.io/rossigee/provider-namecheap:v0.7.6
 EOF
 ```
 
